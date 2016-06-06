@@ -3,6 +3,7 @@ package com.orange.oss.bosh.deployer;
 import java.util.List;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +19,10 @@ public interface BoshFeignClient {
 	
 	
 	//-------------------------	
-	@RequestMapping(method = RequestMethod.GET, value="/stemcells")
+	@RequestMapping(method = RequestMethod.GET, value="/stemcells",consumes = "text/html",          
+            produces = {
+                    MediaType.APPLICATION_JSON_VALUE
+            })
 	List<ApiMappings.Stemcell> getStemcells();
 
 	//-------------------------	

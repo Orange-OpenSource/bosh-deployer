@@ -1,0 +1,12 @@
+   
+director:
+  #url: https://bosh2
+  url: http://localhost:8089/
+  
+  
+  user: bosh-deployer
+  password: ClawzEncedQuogNo
+  proxyHost: ""
+  proxyPort: 3128
+   
+   

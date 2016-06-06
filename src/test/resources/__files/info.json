@@ -1,0 +1,1 @@
+{"name":"bosh2-master-cloudwatt-qa","uuid":"7375394c-83e2-407e-ba85-9471c3624971","version":"1.3232.2.0 (00000000)","user":"bosh-deployer","cpi":"openstack_cpi","user_authentication":{"type":"basic","options":{}},"features":{"dns":{"status":true,"extras":{"domain_name":"bosh"}},"compiled_package_cache":{"status":false,"extras":{"provider":null}},"snapshots":{"status":false}}}

@@ -1,0 +1,11 @@
+   
+director:
+  #url: https://bosh2
+  url: https://bosh2.redacted-domain.org/
+  
+  
+  user: bosh-deployer
+  password: ClawzEncedQuogNo
+  proxyHost: 127.0.0.1
+  proxyPort: 3128
+   

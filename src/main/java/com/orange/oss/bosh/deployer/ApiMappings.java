@@ -1,5 +1,7 @@
 package com.orange.oss.bosh.deployer;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,16 +13,14 @@ import java.util.Map;
  *
  */
 public class ApiMappings {
-
-	
-	
 	public static class Info {
-	    public String name;
-	    public String uuid;
-	    public String version;
-	    public String user; // user [String or null]: Logged in user’s user name if authentication is provided, otherwise null.
-	    public String cpi; //[String]: Name of the CPI the Director will use.
-	    public Map <String,InfoAuth>  user_authentication; // [Hash]:
+		
+		public String name;
+		public String uuid;
+		public String version;
+		public String user; // user [String or null]: Logged in user’s user name if authentication is provided, otherwise null.
+		public String cpi; //[String]: Name of the CPI the Director will use.
+		//public Map <String,InfoAuth>  user_authentication=new HashMap<String,InfoAuth>(); // [Hash]:
 
 		
 	}
@@ -84,7 +84,7 @@ public class ApiMappings {
 	}
 	
 	public static class Deployments {
-		public List<Deployment> deployments;
+		public List<Deployment> deployments=new ArrayList<Deployment>();
 		
 	}
 	

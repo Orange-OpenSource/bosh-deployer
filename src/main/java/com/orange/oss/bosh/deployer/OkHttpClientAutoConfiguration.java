@@ -74,6 +74,7 @@ public class OkHttpClientAutoConfiguration {
 		//ohc.setFollowRedirects(false);
 		ohc.setHostnameVerifier(hostnameVerifier);
 		ohc.setSslSocketFactory(sslSocketFactory);
+		if ((this.proxyHost!=null )&&(this.proxyHost.length()>0)){
 		Proxy proxy=new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.proxyHost, this.proxyPort));
 		ohc.setProxy(proxy);
         ohc.setProxySelector(new ProxySelector() {
@@ -82,10 +83,11 @@ public class OkHttpClientAutoConfiguration {
             return Arrays.asList(proxy);
             }
 			@Override
-			public void connectFailed(URI arg0, SocketAddress arg1, IOException arg2) {
-				throw new IllegalArgumentException("connect to proxy failed",arg2);
+			public void connectFailed(URI uri, SocketAddress socket, IOException e) {
+				throw new IllegalArgumentException("connect to proxy failed",e);
 			}
-        });
+        });}
+		
 	 return ohc;
     }    	
     
