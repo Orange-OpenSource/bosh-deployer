@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.orange.oss.bosh.deployer.ApiMappings.Deployment;
+import com.orange.oss.bosh.deployer.ApiMappings.Release;
+
 @FeignClient(name="bosh-client",url="${director.url}",configuration=com.orange.oss.bosh.deployerfeigncfg.FeignConfiguration.class)
 public interface BoshFeignClient {
 
@@ -28,12 +31,12 @@ public interface BoshFeignClient {
 	//-------------------------	
 	
 	@RequestMapping(method = RequestMethod.GET, value="/releases")
-	List<ApiMappings.Release> getReleases();
+	List<Release> getReleases();
 	
 	
 	//-------------------------	
 	@RequestMapping(method = RequestMethod.GET, value="/deployments")
-	ApiMappings.Deployments getDeployments();
+	List<Deployment> getDeployments();
 	
 	@RequestMapping(method = RequestMethod.GET, value="/deployments/{name}")
 	ApiMappings.SingleDeployment getDeployment(@PathVariable("name") String deploymentName);

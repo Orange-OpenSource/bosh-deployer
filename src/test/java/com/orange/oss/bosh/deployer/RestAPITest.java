@@ -7,9 +7,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.orange.oss.bosh.deployer.ApiMappings.Deployment;
 
 
 
@@ -36,7 +37,7 @@ public class RestAPITest {
 
 	@Test
 	public void testDeployments() {
-		ApiMappings.Deployments deployments=client.getDeployments();
+		List<Deployment> deployments=client.getDeployments();
 		
 	}
 	

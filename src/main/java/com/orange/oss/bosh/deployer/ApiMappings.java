@@ -63,9 +63,9 @@ public class ApiMappings {
 		public String name; // [String]: Deployment name.
 	}
 	
-	public static class Releases {
-		public List<Release> releases;
-	}
+//	public static class Releases {
+//		public List<Release> releases;
+//	}
 	
 	public static class Release{
 		public String name;

@@ -19,8 +19,8 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.github.tomakehurst.wiremock.client.*;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.orange.oss.bosh.deployer.ApiMappings.Deployment;
 import com.orange.oss.bosh.deployer.ApiMappings.Release;
 import com.orange.oss.bosh.deployer.ApiMappings.ReleaseVersion;
 
@@ -62,7 +62,8 @@ public class MockRestAPITest {
 		stubFor(get(urlEqualTo("/stemcells"))
         	    .willReturn(aResponse()            	    
                 .withStatus(200)
-                .withHeader("Content-Type", "text/plain")
+                //.withHeader("Content-Type", "text/plain")
+                .withHeader("Content-Type", "application/json")
                 .withBodyFile("stemcells.json")));
 	
 	List<ApiMappings.Stemcell> stemcells=client.getStemcells();
@@ -80,10 +81,13 @@ public class MockRestAPITest {
                 //.withHeader("Content-Type", "text/plain")
                 .withHeader("Content-Type", "application/json")
                 .withBodyFile("releases.json")));
-		List<Release> releases=client.getReleases();
 		
-		Assert.assertEquals("broker-registrar", releases.get(0).name);
-		ReleaseVersion rv=releases.get(0).release_versions.get(0);
+		
+		List<Release> releases=client.getReleases();
+		Release release=releases.get(0);
+		Assert.assertEquals("broker-registrar", release.name);
+
+		ReleaseVersion rv=release.release_versions.get(0);
 		
 		Assert.assertEquals("1", rv.version);
 		Assert.assertEquals("b4336774", rv.commit_hash);		
@@ -93,8 +97,6 @@ public class MockRestAPITest {
 		expectedJobNames.add("broker-deregistrar");
 		expectedJobNames.add("broker-registrar");
 		Assert.assertEquals(expectedJobNames, rv.job_names);
-		
-
 
 	}
 
@@ -106,7 +108,7 @@ public class MockRestAPITest {
 	                .withHeader("Content-Type", "application/json")
 	                .withBodyFile("deployments.json")));
 		
-		ApiMappings.Deployments deployments=client.getDeployments();
+		List<Deployment> deployments=client.getDeployments();
 	}
 
 	@Test
