@@ -64,15 +64,12 @@ public class ApiMappings {
 	}
 	
 	public static class Releases {
-		
 		public List<Release> releases;
-		
 	}
-	public static class Release {
-
-		public String name; // [String]: Name of the release.
-		public List<ReleaseVersion> release_versions;// [Array]: List of versions available.
-	    
+	
+	public static class Release{
+		public String name;
+		public List<ReleaseVersion>release_versions;
 	}
 	
 	public static class ReleaseVersion{
@@ -81,6 +78,7 @@ public class ApiMappings {
 		public Boolean uncommitted_changes; // [Boolean]: Whether or not the release version was created from a SCM repository with unsaved changes.
 		public Boolean currently_deployed; // [Boolean]: Whether or not the release version is used by any deployments.
 		public List<String>job_names; // [Array of strings]: List of job names associated with the release version.
+		
 	}
 	
 	public static class Deployments {

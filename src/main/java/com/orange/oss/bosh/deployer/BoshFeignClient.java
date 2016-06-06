@@ -28,7 +28,7 @@ public interface BoshFeignClient {
 	//-------------------------	
 	
 	@RequestMapping(method = RequestMethod.GET, value="/releases")
-	List<ApiMappings.Release> getStemReleases();
+	List<ApiMappings.Release> getReleases();
 	
 	
 	//-------------------------	
@@ -39,14 +39,44 @@ public interface BoshFeignClient {
 	ApiMappings.SingleDeployment getDeployment(@PathVariable("name") String deploymentName);
 	
 	
-	@RequestMapping(method = RequestMethod.POST, value="/deployments/{name}")
+	@RequestMapping(method = RequestMethod.POST, value="/deployments/{name}",consumes="text/yaml")
 	//@RequestHeader(name="Content-Type",value="text/yaml")
 	ApiMappings.Task  createupdateDeployment(@PathVariable("name") String deploymentName,
 						@RequestBody String manifest,
 						@RequestParam("recreate") Boolean recreate,
-						@RequestParam("skipDrain") String skipDrain);
+						@RequestParam("skipDrain") String skipDrain); //coma separated jobs names to skip or *
 
 	@RequestMapping(method = RequestMethod.DELETE, value="/deployments/{name}")
 	ApiMappings.Task deleteDeployments(@PathVariable("name") String name, @RequestParam("force") boolean force);
+
+//--------------------------------	
+	@RequestMapping(method = RequestMethod.GET, value="/deployments/{name}/vms")
+	ApiMappings.Tasks getVms(@PathVariable("name") String deploymentName,@RequestParam("format") String format); //full
 	
+	
+
+
+
+	//-------------------------	
+	@RequestMapping(method = RequestMethod.GET, value="/tasks")
+	ApiMappings.Tasks getTasks(@RequestParam("force") int verbose); //2 is verbose ?
+	
+	@RequestMapping(method = RequestMethod.GET, value="/tasks")
+	ApiMappings.Tasks getTasksbyState(@RequestParam("state") String state); //2 is verbose ?
+	
+	@RequestMapping(method = RequestMethod.GET, value="/tasks")
+	ApiMappings.Tasks getTasksByDeployment(@RequestParam("deployment") String deployment); //2 is verbose ?
+	
+	
+	@RequestMapping(method = RequestMethod.GET, value="/tasks/{id}")
+	String getTask(@PathVariable("id") String id); //2 is verbose ?
+	
+	@RequestMapping(method = RequestMethod.GET, value="/tasks/{id}/output")
+	String getTaskDebug(@PathVariable("id") String id,@RequestParam("type") String type); //debug or event or result
+	
+	
+	//----------------------------------
+
+
+
 }
