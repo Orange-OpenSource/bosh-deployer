@@ -30,8 +30,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.orange.oss.bosh.deployerfeigncfg.FeignConfiguration;
+import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Protocol;
+import com.squareup.okhttp.Response;
 
 
 
@@ -74,6 +76,7 @@ public class OkHttpClientAutoConfiguration {
 		//ohc.setFollowRedirects(false);
 		ohc.setHostnameVerifier(hostnameVerifier);
 		ohc.setSslSocketFactory(sslSocketFactory);
+		ohc.interceptors().add(REWRITE_CONTENT_TYPE_INTERCEPTOR);
 		if ((this.proxyHost!=null )&&(this.proxyHost.length()>0)){
 		Proxy proxy=new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.proxyHost, this.proxyPort));
 		ohc.setProxy(proxy);
@@ -136,5 +139,15 @@ public class OkHttpClientAutoConfiguration {
 			}
 
 		   }
+	  
+	  /** Dangerous interceptor that rewrites the server's cache-control header. */
+	  private static final Interceptor REWRITE_CONTENT_TYPE_INTERCEPTOR = new Interceptor() {
+	    @Override public Response intercept(Interceptor.Chain chain) throws IOException {
+	      Response originalResponse = chain.proceed(chain.request());
+	      return originalResponse.newBuilder()
+	          .header("Content-Type", "application/json")
+	          .build();
+	    }
+	  };	  
     
 }

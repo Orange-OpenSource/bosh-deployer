@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestController {
 	private static Logger logger=LoggerFactory.getLogger(TestController.class.getName());
 	
+
+	@Autowired
+	private BoshClient service;
+	
+	
 	@Autowired
 	private BoshFeignClient client;
 	
