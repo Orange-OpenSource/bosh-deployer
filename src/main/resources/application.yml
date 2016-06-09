@@ -17,9 +17,11 @@ security:
 logging:
   level:
     ROOT: INFO
-    org.springframework.web: DEBUG
     feign.Logger: DEBUG
+    com.orange.oss.bosh.deployer: DEBUG
     com.orange.oss.bosh.deployer.BoshFeignClient: DEBUG
+    org.springframework.web.client: DEBUG
+    org.springframework.web.client.HttpMessageConverterExtractor: DEBUG
     
 
 hystrix:

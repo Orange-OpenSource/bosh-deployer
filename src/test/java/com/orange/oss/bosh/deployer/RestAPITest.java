@@ -2,6 +2,8 @@ package com.orange.oss.bosh.deployer;
 
 import java.util.List;
 
+
+import org.fest.assertions.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -17,6 +19,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.orange.oss.bosh.deployer.ApiMappings.Deployment;
+
+import junit.framework.Assert;
 
 
 
@@ -51,6 +55,12 @@ public class RestAPITest {
 	@Test
 	public void testStemcells() {
 		List<ApiMappings.Stemcell> stemcells=client.getStemcells();
+		
+		Assert.assertEquals(1,stemcells.size());
+		Assert.assertEquals("bosh-openstack-kvm-ubuntu-trusty-go_agent", stemcells.get(0).name);
+		Assert.assertEquals("ubuntu-trusty", stemcells.get(0).operating_system);
+		Assert.assertEquals("3232.3", stemcells.get(0).version);		
+
 		
 	}
 	

@@ -11,7 +11,7 @@ public class BoshClient {
 	@Autowired
 	BoshFeignClient client;
 	
-
-	
+	@Autowired
+	ManifestParser parser;
 	
 }
