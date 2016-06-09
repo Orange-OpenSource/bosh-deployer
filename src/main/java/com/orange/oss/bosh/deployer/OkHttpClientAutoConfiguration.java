@@ -44,10 +44,10 @@ public class OkHttpClientAutoConfiguration {
 	private static org.slf4j.Logger logger=LoggerFactory.getLogger(FeignConfiguration.class.getName());
 	
 	
-	@Value("${director.proxyHost}")
+	@Value("${director.proxyHost:null}")
 	private String proxyHost;
 	
-	@Value("${director.proxyPort}")	
+	@Value("${director.proxyPort:0}")	
 	private int proxyPort;
 	
  
@@ -73,11 +73,16 @@ public class OkHttpClientAutoConfiguration {
 		logger.info("===> configuring OkHttp");
 		com.squareup.okhttp.OkHttpClient ohc=new com.squareup.okhttp.OkHttpClient();
 		ohc.setProtocols(Arrays.asList(Protocol.HTTP_1_1));
-		//ohc.setFollowRedirects(false);
+		
+		//Okhttp will follow http redirects (ie: for redirect with task)
+		ohc.setFollowRedirects(false);
+		ohc.setFollowSslRedirects(true);
+		
 		ohc.setHostnameVerifier(hostnameVerifier);
 		ohc.setSslSocketFactory(sslSocketFactory);
 		ohc.interceptors().add(REWRITE_CONTENT_TYPE_INTERCEPTOR);
 		if ((this.proxyHost!=null )&&(this.proxyHost.length()>0)){
+		logger.info("Activatin proxy on host {} port {}",this.proxyHost,this.proxyPort);
 		Proxy proxy=new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.proxyHost, this.proxyPort));
 		ohc.setProxy(proxy);
         ohc.setProxySelector(new ProxySelector() {
@@ -140,7 +145,7 @@ public class OkHttpClientAutoConfiguration {
 
 		   }
 	  
-	  /** Dangerous interceptor that rewrites the server's cache-control header. */
+	  
 	  private static final Interceptor REWRITE_CONTENT_TYPE_INTERCEPTOR = new Interceptor() {
 	    @Override public Response intercept(Interceptor.Chain chain) throws IOException {
 	      Response originalResponse = chain.proceed(chain.request());
