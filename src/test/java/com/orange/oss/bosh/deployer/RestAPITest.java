@@ -87,6 +87,9 @@ public class RestAPITest {
 		Task task=client.getTask(taskId);
 		org.fest.assertions.Assertions.assertThat(task.state==ApiMappings.TaskStatus.error);
 		
+		client.getTaskDebug(taskId, ApiMappings.TaskOutput.debug);
+		client.getTaskDebug(taskId, ApiMappings.TaskOutput.event);
+		client.getTaskDebug(taskId, ApiMappings.TaskOutput.result);
 		
 		
 	}

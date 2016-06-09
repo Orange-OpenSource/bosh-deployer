@@ -39,17 +39,28 @@ public interface BoshFeignClient {
 	@RequestMapping(method = RequestMethod.GET, value="/deployments")
 	List<Deployment> getDeployments();
 	
+	/**
+	 * single deployment
+	 * @param deploymentName
+	 * @return last know correct manifest yaml file
+	 */
 	@RequestMapping(method = RequestMethod.GET, value="/deployments/{name}")
 	ApiMappings.SingleDeployment getDeployment(@PathVariable("name") String deploymentName);
 	
 	
-	@RequestMapping(method = RequestMethod.POST, value="/deployments/{name}",consumes="text/yaml")
-	//@RequestHeader(name="Content-Type",value="text/yaml")
+	@RequestMapping(method = RequestMethod.POST, value="/deployments/{name}",produces="text/yaml")
 	ApiMappings.Task  createupdateDeployment(@PathVariable("name") String deploymentName,
 						@RequestBody String manifest,
-						@RequestParam("recreate") Boolean recreate,
+						@RequestParam("recreate") boolean recreate,
 						@RequestParam("skipDrain") String skipDrain); //coma separated jobs names to skip or *
 
+	@RequestMapping(method = RequestMethod.POST, value="/deployments/{name}",consumes="text/yaml")
+	ApiMappings.Task  createupdateDeployment(@PathVariable("name") String deploymentName,
+						@RequestBody String manifest);
+	
+	
+	
+	
 	@RequestMapping(method = RequestMethod.DELETE, value="/deployments/{name}")
 	ApiMappings.Task deleteDeployments(@PathVariable("name") String name, @RequestParam("force") boolean force);
 
@@ -78,7 +89,7 @@ public interface BoshFeignClient {
 	ApiMappings.Task getTask(@PathVariable("id") int id);
 	
 	@RequestMapping(method = RequestMethod.GET, value="/tasks/{id}/output")
-	String getTaskDebug(@PathVariable("id") String id,@RequestParam("type") String type); //debug or event or result
+	String getTaskDebug(@PathVariable("id") int id,@RequestParam("type") ApiMappings.TaskOutput type); //debug or event or result
 	
 	
 	//----------------------------------

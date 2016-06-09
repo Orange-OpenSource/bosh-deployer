@@ -19,6 +19,18 @@ public class ApiMappings {
 		error
 	}
 	
+	public enum TaskOutput
+	{
+		debug,
+		event,
+		result
+	}
+
+	
+	public enum CloudConfigStatus
+	{
+		none, outdated, latest
+	}
 	
 	
 	public static class Info {
@@ -96,7 +108,7 @@ public class ApiMappings {
 	
 	public static class Deployment {
 		public String name;// [String]: Name of the deployment.
-	    public String cloud_config;// [String]: Indicator whether latest cloud config is used for this deployment. Possible values: none, outdated, latest.
+	    public CloudConfigStatus cloud_config;// [String]: Indicator whether latest cloud config is used for this deployment. Possible values: none, outdated, latest.
 	    public List<DeploymentRelease> releases;
 	    public List<Stemcell> stemcells;// [Array] : List of stemcells used by the deploymemt. name [String]: Name of the stemcell. version [String]: Version of the stemcell. 
 		

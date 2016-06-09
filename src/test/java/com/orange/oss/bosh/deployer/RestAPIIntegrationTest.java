@@ -11,7 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.orange.oss.bosh.deployer.ApiMappings.SingleDeployment;
-
+import com.orange.oss.bosh.deployer.ApiMappings.TaskStatus;
+import static org.fest.assertions.Assertions.*;
 
 
 
@@ -78,6 +79,41 @@ public class RestAPIIntegrationTest {
 		
 		
 	
+	}
+	
+	
+	@Test
+	public void testBoshDeployRecreate(){
+		
+		String deploymentName="hazelcast";
+		//String deploymentName="concourse1";
+		ApiMappings.Deployment d=client.getDeployments().stream()
+				.filter(depl-> depl.name.equals(deploymentName))
+				.findFirst()
+				.get();
+	
+		//retrieve manifest
+		String manifest=client.getDeployment(deploymentName).manifest;
+		
+		//now post, with flag recreate
+		//ApiMappings.Task task=client.createupdateDeployment(deploymentName, manifest, true, "*");
+		ApiMappings.Task task=client.createupdateDeployment(deploymentName, manifest);
+		
+		int taskId=task.id;
+		
+		//Pool task for deploy done
+		ApiMappings.TaskStatus status=null;
+		do {
+			status=client.getTask(taskId).state;
+			logger.info("current deployment status:  "+status);
+			
+		}while(status==TaskStatus.processing);
+		
+		//assert success
+		assertThat(status==TaskStatus.done);
+		
+		
+		
 	}
 
 	
