@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import org.fest.assertions.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,11 +32,33 @@ public class ManifestParserTest {
 				.toPath())));
 		
 		logger.info("parsed manifest"+m );
-		Assertions.assertThat(true);
-
-		
-		
-		
+		Assertions.assertThat(m.director_uuid).isNotEmpty();
 	}
+	
+	@Test
+	public void generate() {
+		
+		ManifestParser parser=new ManifestParser();
+		ManifestMapping.Manifest m=new ManifestMapping.Manifest();
+		
+		String manifest=parser.generate(m);
+		logger.info("generated manifest \n {}",manifest );
+	}
+	
+	@Test
+	public void parseAndGenerate() throws IOException{
+		ManifestParser parser=new ManifestParser();
+		ManifestMapping.Manifest m=parser.parser(new String(Files.readAllBytes(manifestResource
+				.getFile()
+				.toPath())));
+		
+		String generatedManifest=parser.generate(m);
+		logger.info("generated manifest \n {}",generatedManifest );		
+		//Assert Equivalent yaml ?
+	}
+
+	
+	
+	
 
 }
