@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 
 import feign.Feign;
 import feign.Logger;
-import feign.RequestInterceptor;
 import feign.auth.BasicAuthRequestInterceptor;
 import feign.okhttp.OkHttpClient;
 import feign.slf4j.Slf4jLogger;

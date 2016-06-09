@@ -1,7 +1,6 @@
 package com.orange.oss.bosh.deployer;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +12,15 @@ import java.util.Map;
  *
  */
 public class ApiMappings {
+	
+	public enum TaskStatus {
+		done,
+		processing,
+		error
+	}
+	
+	
+	
 	public static class Info {
 		
 		public String name;
@@ -32,18 +40,18 @@ public class ApiMappings {
 	}
 	
 	
-	public static class Tasks {
-		public List<Task> tasks;
-	}
 	
 	public static class Task  {
 		public Integer id;// [Integer]: Numeric ID of the task.
-		public String state; // [String]: Current state of the task. Possible values are: queued, processing, cancelled, cancelling, done, errored.
+		public TaskStatus state; // [String]: Current state of the task. Possible values are: queued, processing, cancelled, cancelling, done, errored.
 		public String description; //description [String]: Description of the task’s purpose.
 		public Integer timestamp;// [Integer]: todo.
 		public String result; // [String or null]: Description of the task’s result. Will not be populated (string) unless tasks finishes.
 		public String user; // [String]: User which started the task.
 	}
+	
+	
+	
 	
 	public static class Stemcells {
 		public List<Stemcell> stemcells;
@@ -105,9 +113,6 @@ public class ApiMappings {
 	}
 	
 	
-	public static class Vms {
-		public List<Vm> vms;
-	}
 	
 	public static class Vm {
 	    public String agent_id;// [String]: Unique ID of the Agent associated with the VM.

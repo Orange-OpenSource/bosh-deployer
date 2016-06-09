@@ -12,6 +12,8 @@ public class ManifestMapping {
 		public Update update;
 		public List<Stemcell> stemcells;
 		public List<InstanceGroup> instance_groups;
+		
+		public Map<String,Object> properties; // yaml structure		
 
 	}
 
@@ -40,9 +42,10 @@ public class ManifestMapping {
 	public static class InstanceGroup {
 		public String name;
 		public int instances; // 1
+		public String lifecycle; //errand		
 		public String vm_type; // default
 		public String stemcell; // trusty
-		public String lifecycle; //errand
+		
 		public String persistent_disk_type; //name in cloudconfig
 		public List<String> azs;// [z1]
 		public List<Network> networks;
@@ -58,8 +61,13 @@ public class ManifestMapping {
 		public String name;
 		public String release;
 		public Map<String,Object> properties; // yaml structure
-		public List<Link> consumes;
-		public List<Link> produces;
+		
+		public Map<String,Object> consumes; //FIXME: correctly parse link
+		public Map<String,Object> provides; ////FIXME: correctly parse link
+		
+		
+//		public List<Link> consumes; //FIXME: correctly parse link
+//		public List<Link> provides; ////FIXME: correctly parse link
 	}
 
 	public static class Link {

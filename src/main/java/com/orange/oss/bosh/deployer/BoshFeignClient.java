@@ -3,6 +3,7 @@ package com.orange.oss.bosh.deployer;
 import java.util.List;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
+import org.springframework.context.event.ApplicationListenerMethodAdapter;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.orange.oss.bosh.deployer.ApiMappings.Deployment;
 import com.orange.oss.bosh.deployer.ApiMappings.Release;
+import com.orange.oss.bosh.deployer.ApiMappings.Vm;
 
 @FeignClient(name="bosh-client",url="${director.url}",configuration=com.orange.oss.bosh.deployerfeigncfg.FeignConfiguration.class)
 public interface BoshFeignClient {
@@ -54,25 +56,27 @@ public interface BoshFeignClient {
 
 //--------------------------------	
 	@RequestMapping(method = RequestMethod.GET, value="/deployments/{name}/vms")
-	ApiMappings.Tasks getVms(@PathVariable("name") String deploymentName,@RequestParam("format") String format); //full
+	List<Vm> getVms(@PathVariable("name") String deploymentName);
 	
 	
+	@RequestMapping(method = RequestMethod.GET, value="/deployments/{name}/vms")
+	List<Vm> getVmsFormat(@PathVariable("name") String deploymentName,@RequestParam("format") String format); //full
 
 
 
 	//-------------------------	
 	@RequestMapping(method = RequestMethod.GET, value="/tasks")
-	ApiMappings.Tasks getTasks(@RequestParam("force") int verbose); //2 is verbose ?
+	List<ApiMappings.Task> getTasks(@RequestParam("force") int verbose); //2 is verbose ?
 	
 	@RequestMapping(method = RequestMethod.GET, value="/tasks")
-	ApiMappings.Tasks getTasksbyState(@RequestParam("state") String state); //2 is verbose ?
+	List<ApiMappings.Task> getTasksByState(@RequestParam("state") ApiMappings.TaskStatus state);
 	
 	@RequestMapping(method = RequestMethod.GET, value="/tasks")
-	ApiMappings.Tasks getTasksByDeployment(@RequestParam("deployment") String deployment); //2 is verbose ?
+	List<ApiMappings.Task> getTasksByDeployment(@RequestParam("deployment") String deployment); //2 is verbose ?
 	
 	
 	@RequestMapping(method = RequestMethod.GET, value="/tasks/{id}")
-	String getTask(@PathVariable("id") String id); //2 is verbose ?
+	ApiMappings.Task getTask(@PathVariable("id") int id);
 	
 	@RequestMapping(method = RequestMethod.GET, value="/tasks/{id}/output")
 	String getTaskDebug(@PathVariable("id") String id,@RequestParam("type") String type); //debug or event or result
