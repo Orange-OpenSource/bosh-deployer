@@ -16,7 +16,8 @@ public class ApiMappings {
 	public enum TaskStatus {
 		done,
 		processing,
-		error
+		error,
+		queued
 	}
 	
 	public enum TaskOutput
