@@ -14,6 +14,13 @@ import com.orange.oss.bosh.deployer.ApiMappings.Deployment;
 import com.orange.oss.bosh.deployer.ApiMappings.Release;
 import com.orange.oss.bosh.deployer.ApiMappings.Vm;
 
+
+/**
+ * Director API Feign description
+ * for missing verns, see https://github.com/cloudfoundry/bosh/blob/master/bosh_cli/lib/cli/client/director.rb
+ * @author poblin-orange
+ *
+ */
 @FeignClient(name="bosh-client",url="${director.url}",configuration=com.orange.oss.bosh.deployerfeigncfg.FeignConfiguration.class)
 public interface BoshFeignClient {
 
@@ -54,9 +61,8 @@ public interface BoshFeignClient {
 						@RequestParam("recreate") boolean recreate,
 						@RequestParam("skipDrain") String skipDrain); //coma separated jobs names to skip or *
 
-	@RequestMapping(method = RequestMethod.POST, value="/deployments/{name}",consumes="text/yaml")
-	ApiMappings.Task  createupdateDeployment(@PathVariable("name") String deploymentName,
-						@RequestBody String manifest);
+	@RequestMapping(method = RequestMethod.POST, value="/deployments",consumes="text/yaml")
+	ApiMappings.Task  createupdateDeployment(@RequestBody String manifest);
 	
 	
 	

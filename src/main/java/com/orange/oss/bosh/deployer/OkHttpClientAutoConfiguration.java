@@ -33,6 +33,7 @@ import com.orange.oss.bosh.deployerfeigncfg.FeignConfiguration;
 import com.squareup.okhttp.Interceptor;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Protocol;
+import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 
@@ -75,12 +76,14 @@ public class OkHttpClientAutoConfiguration {
 		ohc.setProtocols(Arrays.asList(Protocol.HTTP_1_1));
 		
 		//Okhttp will follow http redirects (ie: for redirect with task)
-		ohc.setFollowRedirects(false);
+		ohc.setFollowRedirects(true);
 		ohc.setFollowSslRedirects(true);
 		
 		ohc.setHostnameVerifier(hostnameVerifier);
 		ohc.setSslSocketFactory(sslSocketFactory);
+		ohc.interceptors().add(LOGGING_INTERCEPTOR);
 		ohc.interceptors().add(REWRITE_CONTENT_TYPE_INTERCEPTOR);
+		
 		if ((this.proxyHost!=null )&&(this.proxyHost.length()>0)){
 		logger.info("Activatin proxy on host {} port {}",this.proxyHost,this.proxyPort);
 		Proxy proxy=new Proxy(Proxy.Type.HTTP, new InetSocketAddress(this.proxyHost, this.proxyPort));
@@ -153,6 +156,26 @@ public class OkHttpClientAutoConfiguration {
 	          .header("Content-Type", "application/json")
 	          .build();
 	    }
-	  };	  
+	  };
+	  
+	  
+	  private static final Interceptor LOGGING_INTERCEPTOR= new Interceptor(){
+	  		  @Override public Response intercept(Interceptor.Chain chain) throws IOException {
+		    Request request = chain.request();
+
+		    long t1 = System.nanoTime();
+		    logger.info(String.format("Sending request %s on %s%n%s",
+		        request.url(), chain.connection(), request.headers()));
+
+		    Response response = chain.proceed(request);
+
+		    long t2 = System.nanoTime();
+		    logger.info(String.format("Received response for %s in %.1fms%n%s",
+		        response.request().url(), (t2 - t1) / 1e6d, response.headers()));
+
+		    return response;
+		  }
+		};
+	  
     
 }

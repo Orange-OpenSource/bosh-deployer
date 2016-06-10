@@ -75,9 +75,6 @@ public class RestAPIIntegrationTest {
 		//parse deployment manifest
 		logger.info("retrieved manifest \n {}",manifest );
 		ManifestMapping.Manifest m=this.manifestParser.parser(manifest);
-			
-		
-		
 	
 	}
 	
@@ -91,13 +88,16 @@ public class RestAPIIntegrationTest {
 				.filter(depl-> depl.name.equals(deploymentName))
 				.findFirst()
 				.get();
-	
 		//retrieve manifest
 		String manifest=client.getDeployment(deploymentName).manifest;
 		
+		
+		//fix manifest to clone depl
+		
+		
 		//now post, with flag recreate
 		//ApiMappings.Task task=client.createupdateDeployment(deploymentName, manifest, true, "*");
-		ApiMappings.Task task=client.createupdateDeployment(deploymentName, manifest);
+		ApiMappings.Task task=client.createupdateDeployment(/** deploymentName,**/ manifest); //no use, depl name is in manifest
 		
 		int taskId=task.id;
 		
