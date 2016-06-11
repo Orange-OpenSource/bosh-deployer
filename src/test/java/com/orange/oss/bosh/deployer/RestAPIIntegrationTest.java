@@ -14,6 +14,8 @@ import com.orange.oss.bosh.deployer.ApiMappings.SingleDeployment;
 import com.orange.oss.bosh.deployer.ApiMappings.TaskStatus;
 import static org.fest.assertions.Assertions.*;
 
+import org.apache.tomcat.websocket.pojo.PojoEndpointBase;
+
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -94,10 +96,14 @@ public class RestAPIIntegrationTest {
 		
 		//fix manifest to clone depl
 		
+		ManifestMapping.Manifest pojoManifest=this.manifestParser.parser(manifest);
+		pojoManifest.name="clone-hazelcast";
+		String newManifest=this.manifestParser.generate(pojoManifest);
+		
 		
 		//now post, with flag recreate
 		//ApiMappings.Task task=client.createupdateDeployment(deploymentName, manifest, true, "*");
-		ApiMappings.Task task=client.createupdateDeployment(/** deploymentName,**/ manifest); //no use, depl name is in manifest
+		ApiMappings.Task task=client.createupdateDeployment(/** deploymentName,**/ newManifest); //no use, depl name is in manifest
 		
 		int taskId=task.id;
 		
@@ -107,10 +113,11 @@ public class RestAPIIntegrationTest {
 			status=client.getTask(taskId).state;
 			logger.info("current deployment status:  "+status);
 			
-		}while(status==TaskStatus.processing);
+		}while(status!=TaskStatus.done && status!=TaskStatus.error);
 		
 		//assert success
 		assertThat(status==TaskStatus.done);
+		
 		
 		
 		

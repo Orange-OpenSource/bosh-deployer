@@ -1,8 +1,11 @@
 package com.orange.oss.bosh.deployer;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ManifestMapping {
 
 	public static class Manifest {
@@ -13,7 +16,7 @@ public class ManifestMapping {
 		public List<Stemcell> stemcells;
 		public List<InstanceGroup> instance_groups;
 		
-		public Map<String,Object> properties; // yaml structure		
+		public Map<String,Object> properties=new HashMap<String,Object>(); // yaml structure		
 
 	}
 
@@ -42,15 +45,16 @@ public class ManifestMapping {
 	public static class InstanceGroup {
 		public String name;
 		public int instances; // 1
-		public String lifecycle; //errand		
+		
 		public String vm_type; // default
 		public String stemcell; // trusty
 		
+		public String lifecycle; //errand
 		public String persistent_disk_type; //name in cloudconfig
 		public List<String> azs;// [z1]
 		public List<Network> networks;
-
 		public List<Job> jobs;
+		public Map<String,Object> properties=new HashMap<String,Object>();; // deprecated in favor of job level properties
 	}
 
 	public static class Network {
@@ -60,10 +64,10 @@ public class ManifestMapping {
 	public static class Job {
 		public String name;
 		public String release;
-		public Map<String,Object> properties; // yaml structure
 		
-		public Map<String,Object> consumes; //FIXME: correctly parse link
-		public Map<String,Object> provides; ////FIXME: correctly parse link
+		public Map<String,Object> consumes=new HashMap<String, Object>(); //FIXME: correctly parse link
+		public Map<String,Object> provides=new HashMap<String, Object>(); ////FIXME: correctly parse link
+		public Map<String,Object> properties=new HashMap<String,Object>();// job level properties
 		
 		
 //		public List<Link> consumes; //FIXME: correctly parse link

@@ -2,8 +2,12 @@ package com.orange.oss.bosh.deployer;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.Map;
 
 import org.fest.assertions.Assertions;
+import org.hamcrest.core.IsNull;
+
+import static org.fest.assertions.Assertions.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -22,7 +26,10 @@ public class ManifestParserTest {
 	
 	@Value("classpath:/manifests/hazelcast.yml")
     private Resource manifestResource;
-	
+
+	@Value("classpath:/manifests/all-constructs-manifest.yml")
+    private Resource allConstructManifestResource;
+
 	
 	@Test
 	public void testParser() throws IOException {
@@ -48,7 +55,7 @@ public class ManifestParserTest {
 	@Test
 	public void parseAndGenerate() throws IOException{
 		ManifestParser parser=new ManifestParser();
-		ManifestMapping.Manifest m=parser.parser(new String(Files.readAllBytes(manifestResource
+		ManifestMapping.Manifest m=parser.parser(new String(Files.readAllBytes(allConstructManifestResource
 				.getFile()
 				.toPath())));
 		
@@ -57,6 +64,57 @@ public class ManifestParserTest {
 		//Assert Equivalent yaml ?
 	}
 
+	@Test
+	public void testParseAllConstucts() throws IOException {
+		ManifestParser parser=new ManifestParser();
+		ManifestMapping.Manifest m=parser.parser(new String(Files.readAllBytes(this.allConstructManifestResource
+				.getFile()
+				.toPath())));
+		
+		logger.info("parsed manifest"+m );
+		assertThat(m.director_uuid).isNotEmpty();
+		assertThat(m.name).isEqualTo("name");
+		
+		assertThat(m.update.canaries).isNotNull();
+		assertThat(m.update.canary_watch_time).isNotNull();
+		assertThat(m.update.max_in_flight).isNotNull();
+		assertThat(m.update.serial).isNotNull();
+		
+		
+		assertThat(m.stemcells.get(0).os).isNotEmpty();
+		assertThat(m.stemcells.get(0).alias).isNotEmpty();
+		assertThat(m.stemcells.get(0).version).isNotEmpty();
+		
+		assertThat(m.releases.get(0).name).isNotEmpty();
+		assertThat(m.releases.get(0).version).isNotEmpty();
+		
+		
+		assertThat(m.instance_groups.get(0).name).isEqualTo("test-errand");
+		assertThat(m.instance_groups.get(0).instances).isPositive();
+		assertThat(m.instance_groups.get(0).persistent_disk_type).isNull();
+//		assertThat(m.instance_groups.get(0).life_cycle).isNotEmpty();
+		
+		assertThat(m.instance_groups.get(0).azs).isNotEmpty();
+		assertThat(m.instance_groups.get(0).azs.get(0)).isNotEmpty();		
+		
+		assertThat(m.instance_groups.get(0).networks).isNotEmpty();
+		assertThat(m.instance_groups.get(0).networks.get(0).name).isNotEmpty();
+
+		assertThat(m.instance_groups.get(0).jobs).isNotEmpty();	
+		assertThat(m.instance_groups.get(0).jobs.size()).isPositive();
+
+		assertThat(m.instance_groups.get(0).jobs.get(0).name).isNotEmpty();
+		assertThat(m.instance_groups.get(0).jobs.get(0).release).isNotEmpty();
+		assertThat(m.instance_groups.get(0).jobs.get(0).consumes).isNotEmpty();
+		assertThat(m.instance_groups.get(0).jobs.get(0).provides).isNotEmpty();
+		
+		assertThat(m.instance_groups.get(0).jobs.get(0).properties).isNotEmpty();
+		assertThat(m.instance_groups.get(0).jobs.get(0).properties.get("prop1")).isEqualTo("valueprop1");
+		
+		Map subpros=(Map) m.instance_groups.get(0).jobs.get(0).properties.get("prop2");
+		assertThat(subpros.get("prop2_1")).isEqualTo("value_prop2_1");
+		
+	}
 	
 	
 	
