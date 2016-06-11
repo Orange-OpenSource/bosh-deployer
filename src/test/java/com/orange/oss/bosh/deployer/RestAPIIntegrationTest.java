@@ -1,5 +1,7 @@
 package com.orange.oss.bosh.deployer;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -12,9 +14,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.orange.oss.bosh.deployer.ApiMappings.SingleDeployment;
 import com.orange.oss.bosh.deployer.ApiMappings.TaskStatus;
-import static org.fest.assertions.Assertions.*;
-
-import org.apache.tomcat.websocket.pojo.PojoEndpointBase;
 
 
 
@@ -99,6 +98,7 @@ public class RestAPIIntegrationTest {
 		ManifestMapping.Manifest pojoManifest=this.manifestParser.parser(manifest);
 		pojoManifest.name="clone-hazelcast";
 		String newManifest=this.manifestParser.generate(pojoManifest);
+		logger.info("generated new manifest {}",newManifest);
 		
 		
 		//now post, with flag recreate
@@ -116,7 +116,7 @@ public class RestAPIIntegrationTest {
 		}while(status!=TaskStatus.done && status!=TaskStatus.error);
 		
 		//assert success
-		assertThat(status==TaskStatus.done);
+		assertThat(status).isEqualTo(TaskStatus.done);
 		
 		
 		

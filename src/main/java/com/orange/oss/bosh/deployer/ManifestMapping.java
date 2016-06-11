@@ -5,7 +5,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(Include.NON_NULL)
 public class ManifestMapping {
 
 	public static class Manifest {
@@ -42,6 +46,7 @@ public class ManifestMapping {
 		public String version; // latest
 	}
 
+	@JsonInclude(Include.NON_NULL)
 	public static class InstanceGroup {
 		public String name;
 		public int instances; // 1
@@ -50,7 +55,7 @@ public class ManifestMapping {
 		public String stemcell; // trusty
 		
 		public String lifecycle; //errand
-		public String persistent_disk_type; //name in cloudconfig
+		public String persistent_disk_type; //name in cloudconfig. optional ?
 		public List<String> azs;// [z1]
 		public List<Network> networks;
 		public List<Job> jobs;
