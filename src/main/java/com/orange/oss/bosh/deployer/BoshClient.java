@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.orange.oss.bosh.deployer.ApiMappings.SingleDeployment;
 import com.orange.oss.bosh.deployer.ApiMappings.Task;
 import com.orange.oss.bosh.deployer.ApiMappings.TaskOutput;
 import com.orange.oss.bosh.deployer.ApiMappings.TaskStatus;
@@ -31,8 +32,31 @@ public class BoshClient {
 	@Autowired
 	ManifestParser parser;
 	
+	@Autowired
+	PlantUmlRender umlRenderer;
+	
 	int pollingFrequencySeconds = 2; //polls director every 2s for task status
 	
+	
+	
+	public String renderUml(String deploymentName){
+		
+		
+		//String deploymentName="concourse1";
+		ApiMappings.Deployment d=client.getDeployments().stream()
+				.filter(depl-> depl.name.equals(deploymentName))
+				.findFirst()
+				.get();
+		
+		
+		//parse manifest.yaml
+		SingleDeployment manifestText=client.getDeployment(deploymentName);
+		ManifestMapping.Manifest manifest=this.parser.parser(manifestText.manifest);
+		
+		return this.umlRenderer.renderUml(d,manifest);
+		
+
+	}
 	
 	/**
 	 * get vms details for a given deployment

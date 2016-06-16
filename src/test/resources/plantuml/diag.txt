@@ -1,0 +1,30 @@
+artifact "route-registrar" <<releases>>
+artifact "logsearch-shipper" <<releases>>
+artifact "consul" <<releases>>
+artifact "broker-registrar" <<releases>>
+artifact "hazelcast" <<releases>>
+artifact "bosh-openstack-kvm-ubuntu-trusty-go_agent" <<stemcell>>
+node "broker-registrar"
+node "broker-registrar"
+node "broker-deregistrar"
+node "broker-deregistrar"
+node "push-bosh-zuul_gateway"
+node "publish_bosh_zuul_gateway"
+node "hazelcast-management"
+node "broker"
+node "hazelcast_mancenter"
+node "route-registrar"
+node "consul-servers"
+node "consul"
+node "hazelcast-cluster"
+node "consul"
+node "hazelcast_node"
+"broker-registrar" -- "broker-registrar"
+"broker-deregistrar" -- "broker-deregistrar"
+"publish_bosh_zuul_gateway" -- "push-bosh-zuul_gateway"
+"broker" -- "hazelcast-management"
+"hazelcast_mancenter" -- "hazelcast-management"
+"route-registrar" -- "hazelcast-management"
+"consul" -- "consul-servers"
+"consul" -- "hazelcast-cluster"
+"hazelcast_node" -- "hazelcast-cluster"
