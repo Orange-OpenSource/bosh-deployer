@@ -29,12 +29,6 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		
-		
-<!-- 		<dependency> -->
-<!-- 			<groupId>org.springframework.cloud</groupId> -->
-<!-- 			<artifactId>spring-cloud-cluster-hazelcast</artifactId> -->
-<!-- 		</dependency> -->
-		
 		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-feign</artifactId>
@@ -43,6 +37,12 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-hystrix</artifactId>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-zipkin</artifactId>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -54,14 +54,7 @@
 		    <artifactId>jackson-dataformat-yaml</artifactId>
 		</dependency>		
 		
-		<!-- for feign http proxy setting? -->
-		
-<!-- 		<dependency> -->
-<!-- 		  <groupId>io.jmnarloch</groupId> -->
-<!-- 		  <artifactId>feign-okhttp-spring-cloud-starter</artifactId> -->
-<!-- 		  <version>1.0.0</version> -->
-<!-- 		</dependency>		 -->
-		
+		<!-- for feign http proxy setting -->
 		<dependency>
 		    <groupId>com.netflix.feign</groupId>
 		    <artifactId>feign-okhttp</artifactId>

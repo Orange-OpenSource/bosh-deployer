@@ -7,6 +7,14 @@ spring:
   application:
     name: bosh-deployer
 
+  sleuth:
+    sampler:
+      percentage: 1.0
+  zipkin:
+    enabled: false
+    base-url: http://zipkin-server 
+
+
 security:
   ignored: /favicon.ico, /
   basic:

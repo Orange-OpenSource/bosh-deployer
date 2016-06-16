@@ -1,12 +1,12 @@
 package com.orange.oss.bosh.deployer;
 
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import java.util.List;
 import java.util.UUID;
 
 import org.fest.assertions.Assertions;
-import static org.fest.assertions.Assertions.*;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;

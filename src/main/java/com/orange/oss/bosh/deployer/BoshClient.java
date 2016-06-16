@@ -3,7 +3,6 @@ package com.orange.oss.bosh.deployer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,25 +92,47 @@ public class BoshClient {
 		logger.info("generated new manifest {}",newManifest);
 		
 		
+		return deploy(newDeploymentName, newManifest);
+	}
+
+	private List<VmFull> deploy(String deploymentName, String manifest) {
 		//now post, with flag recreate
 		
-		ApiMappings.Task task=client.createupdateDeployment(newManifest); //no use, depl name is in manifest
+		ApiMappings.Task task=client.createupdateDeployment(manifest); 
 
 		Task finalResultTask=this.waitForTaskDone(task, 60*20); //20mins
 		
 		//assert success
 		if (finalResultTask.state!=TaskStatus.done) {
 			logger.error("Failed deployment, ends with status {}:\n {}",finalResultTask.state,finalResultTask.result);
-			throw new IllegalArgumentException("Failed Deployment "+finalResultTask);
+			throw new IllegalArgumentException("Failed Deployment "+finalResultTask+ ":"+finalResultTask.result);
 		}
-		logger.info("created deployment : {}",newDeploymentName);		
+		logger.info("created deployment : {}",deploymentName);		
 		
 		//retrieves vms and ip address
-		 List<VmFull> detailsVMs=this.detailsVMs(newDeploymentName);
+		 List<VmFull> detailsVMs=this.detailsVMs(deploymentName);
 		 return detailsVMs;
 	}
 	
-	
+	/**
+	 * deploys a manifest.
+	 * Updates stemcell and release references to latest in bosh director
+	 * @param manifest
+	 * @return
+	 */
+	public List<VmFull> deploy(ManifestMapping.Manifest manifest){
+		String deploymentName=manifest.name;
+		
+		//TODO change all release version to lastest available on director
+		
+		
+		//TODO change all stemcell version to lastest available on director
+		// use full with bosh2 ?
+		
+		
+		
+		return this.deploy(deploymentName, this.manifestParser.generate(manifest));
+	}
 	
 	
 	/**
