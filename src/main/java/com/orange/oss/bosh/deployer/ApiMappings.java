@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 
 /**
  * JSON mapping 
@@ -11,6 +15,11 @@ import java.util.Map;
  * @author poblin-orange
  *
  */
+
+//FIXME: should we ignore unknow fields?
+//@JsonIgnoreProperties(ignoreUnknown = true)
+//@JsonInclude(Include.NON_NULL)
+
 public class ApiMappings {
 	
 	public enum TaskStatus {
@@ -161,52 +170,52 @@ public class ApiMappings {
 
 	
 	public static class Vitals{
-		VitalsCPU cpu;
-		VitalsDisk disk;
-		List<Float> load;
-		VitalsMemValues mem;
-		VitalsMemValues swap;
-		List<VitalsProcess> processes;
+		public VitalsCPU cpu;
+		public VitalsDisk disk;
+		public List<Float> load;
+		public VitalsMemValues mem;
+		public VitalsMemValues swap;
+		public List<VitalsProcess> processes;
 	}
 
 	
 	public static class VitalsProcess{
-		String name;
-		String state; //eg: running
-		VitalsProcessUptime uptime;
-		VitalsMemValues mem;
-		VitalsProcessCpu cpu;
+		public String name;
+		public String state; //eg: running
+		public VitalsProcessUptime uptime;
+		public VitalsMemValues mem;
+		public VitalsProcessCpu cpu;
 	}
 	
 	public static class VitalsProcessUptime{
-		long secs;
+		public long secs;
 	}
 	public static class VitalsProcessCpu{
-		float total;
+		public float total;
 	}
 	
 	
 	public static class VitalsMemValues{
-		int kb;
-		int percent;
+		public int kb;
+		public int percent;
 	}
 	
 	public static class VitalsCPU{
-		float sys;
-		float user;
-		float wait;
+		public float sys;
+		public float user;
+		public float wait;
 	}
 	
 	public static class VitalsDisk{
-		VitalsDiskInfo ephemeral;
-		VitalsDiskInfo persistent;
-		VitalsDiskInfo system;
+		public VitalsDiskInfo ephemeral;
+		public VitalsDiskInfo persistent;
+		public VitalsDiskInfo system;
 	}
 	
 	
 	public static class VitalsDiskInfo{
-		int inode_percent;
-		int percent;
+		public int inode_percent;
+		public int percent;
 	}
 
 }

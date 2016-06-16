@@ -4,6 +4,8 @@ package com.orange.oss.bosh.deployer;
 import java.util.List;
 
 import org.fest.assertions.Assertions;
+import static org.fest.assertions.Assertions.*;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -35,6 +37,37 @@ public class BoshClientTest {
 		String deploymentName="hazelcast"; //fix get deployment from director
 		List<VmFull> vmsDetails=this.client.detailsVMs(deploymentName);
 		Assertions.assertThat(vmsDetails).isNotEmpty();
+		
+		//vm
+		assertThat(vmsDetails.get(0).agent_id).isNotEmpty();
+		assertThat(vmsDetails.get(0).az).isNotEmpty();
+		assertThat(vmsDetails.get(0).bootstrap).isNotNull();
+		//assertThat(vmsDetails.get(0).disk_cid).isNotEmpty();
+		assertThat(vmsDetails.get(0).id).isNotEmpty();
+		assertThat(vmsDetails.get(0).job_name).isNotEmpty();
+		assertThat(vmsDetails.get(0).job_state).isNotEmpty();
+		assertThat(vmsDetails.get(0).resource_pool).isNotEmpty();
+		assertThat(vmsDetails.get(0).resurrection_paused).isNotNull();
+		assertThat(vmsDetails.get(0).vm_cid).isNotNull();		
+		assertThat(vmsDetails.get(0).vm_type).isNotNull();		
+		
+		//vitals
+		assertThat(vmsDetails.get(0).vitals.cpu.user).isNotNull();
+		assertThat(vmsDetails.get(0).vitals.cpu.sys).isNotNull();
+		assertThat(vmsDetails.get(0).vitals.cpu.wait).isNotNull();
+		
+		assertThat(vmsDetails.get(0).dns.get(0)).isNotEmpty();
+		
+		//ips
+		assertThat(vmsDetails.get(0).ips.get(0)).isNotEmpty();
+
+		//processes
+		assertThat(vmsDetails.get(0).processes.get(0).name).isNotEmpty();
+		assertThat(vmsDetails.get(0).processes.get(0).state).isNotEmpty();
+		
+		assertThat(vmsDetails.get(0).processes.get(0).uptime.secs).isPositive();
+		assertThat(vmsDetails.get(0).processes.get(0).cpu.total).isNotNull();
+		
 	}
 
 }
