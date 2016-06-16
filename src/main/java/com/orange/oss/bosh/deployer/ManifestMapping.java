@@ -74,7 +74,6 @@ public class ManifestMapping {
 		public Map<String,Object> provides=new HashMap<String, Object>(); ////FIXME: correctly parse link
 		public Map<String,Object> properties=new HashMap<String,Object>();// job level properties
 		
-		
 //		public List<Link> consumes; //FIXME: correctly parse link
 //		public List<Link> provides; ////FIXME: correctly parse link
 	}

@@ -72,7 +72,7 @@ public class RestAPITest {
 
 		client.getVms(d.name).stream().forEach(vm -> logger.info("vm: cid {} {}/{}  ",vm.cid,vm.job,vm.index));
 
-		client.getVmsFormat(d.name, "full").stream().forEach(vm -> logger.info("vm: cid {} {}/{}  ",vm.cid,vm.job,vm.index));
+		Task vmsListTask=client.getVmsFormat(d.name, "full");
 	}
 	
 	@Test

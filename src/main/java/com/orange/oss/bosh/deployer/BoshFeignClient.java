@@ -76,7 +76,7 @@ public interface BoshFeignClient {
 	
 	
 	@RequestMapping(method = RequestMethod.GET, value="/deployments/{name}/vms")
-	List<Vm> getVmsFormat(@PathVariable("name") String deploymentName,@RequestParam("format") String format); //full
+	ApiMappings.Task getVmsFormat(@PathVariable("name") String deploymentName,@RequestParam("format") String format); //full
 
 
 

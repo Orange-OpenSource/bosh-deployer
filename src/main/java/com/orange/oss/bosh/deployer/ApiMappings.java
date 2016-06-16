@@ -84,9 +84,6 @@ public class ApiMappings {
 		public String name; // [String]: Deployment name.
 	}
 	
-//	public static class Releases {
-//		public List<Release> releases;
-//	}
 	
 	public static class Release{
 		public String name;
@@ -151,11 +148,65 @@ public class ApiMappings {
 		public String job_state;// [String]: Aggregate state of job. Possible values: running and other values that represent unhealthy state.
 		public List<String> ips;// [Array of strings]: List of IPs.
 		public List<String> dns;// [Array of strings]: List of DNS records.
-		public Map<String,String>vitals;// [Hash]: VM vitals.
-		public List<Map<String,String >> processes;// [Array of hashes]: List of processes running as part of the job.
+		public Vitals vitals;// [Hash]: VM vitals.
+		public List<VitalsProcess> processes;// [Array of hashes]: List of processes running as part of the job.
+		
+		
+		public String state; //undocumented. started
+		public String vm_type; //undocumented. bosh 2 vm type
+		public Boolean bootstrap; //undocumented
+		public String az;//undocumented.
+		public String id;//undocumented.
 	}
 
 	
-		
+	public static class Vitals{
+		VitalsCPU cpu;
+		VitalsDisk disk;
+		List<Float> load;
+		VitalsMemValues mem;
+		VitalsMemValues swap;
+		List<VitalsProcess> processes;
+	}
+
 	
+	public static class VitalsProcess{
+		String name;
+		String state; //eg: running
+		VitalsProcessUptime uptime;
+		VitalsMemValues mem;
+		VitalsProcessCpu cpu;
+	}
+	
+	public static class VitalsProcessUptime{
+		long secs;
+	}
+	public static class VitalsProcessCpu{
+		float total;
+	}
+	
+	
+	public static class VitalsMemValues{
+		int kb;
+		int percent;
+	}
+	
+	public static class VitalsCPU{
+		float sys;
+		float user;
+		float wait;
+	}
+	
+	public static class VitalsDisk{
+		VitalsDiskInfo ephemeral;
+		VitalsDiskInfo persistent;
+		VitalsDiskInfo system;
+	}
+	
+	
+	public static class VitalsDiskInfo{
+		int inode_percent;
+		int percent;
+	}
+
 }

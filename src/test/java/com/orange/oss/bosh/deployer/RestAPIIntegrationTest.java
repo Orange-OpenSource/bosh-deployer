@@ -2,6 +2,11 @@ package com.orange.oss.bosh.deployer;
 
 import static org.fest.assertions.Assertions.assertThat;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -12,8 +17,12 @@ import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import com.orange.oss.bosh.deployer.ApiMappings.Deployment;
 import com.orange.oss.bosh.deployer.ApiMappings.SingleDeployment;
+import com.orange.oss.bosh.deployer.ApiMappings.Task;
 import com.orange.oss.bosh.deployer.ApiMappings.TaskStatus;
+import com.orange.oss.bosh.deployer.ApiMappings.Vm;
+import com.orange.oss.bosh.deployer.ManifestMapping.Network;
 
 
 
@@ -96,7 +105,17 @@ public class RestAPIIntegrationTest {
 		//fix manifest to clone depl
 		
 		ManifestMapping.Manifest pojoManifest=this.manifestParser.parser(manifest);
-		pojoManifest.name="clone-hazelcast";
+		pojoManifest.name="clone-hazelcast-"+UUID.randomUUID();
+		
+		//patch network to target ondemand network
+		pojoManifest.instance_groups.forEach(ig -> {
+			Network n=new Network();
+			n.name="net-bosh-ondemand";
+			ig.networks=new ArrayList<Network>();
+			ig.networks.add(n);
+		});
+		
+		
 		String newManifest=this.manifestParser.generate(pojoManifest);
 		logger.info("generated new manifest {}",newManifest);
 		
@@ -108,18 +127,54 @@ public class RestAPIIntegrationTest {
 		int taskId=task.id;
 		
 		//Pool task for deploy done
-		ApiMappings.TaskStatus status=null;
+		Task currentTask =null;
 		do {
-			status=client.getTask(taskId).state;
-			logger.info("current deployment status:  "+status);
+			currentTask = client.getTask(taskId);
+			logger.info("current deployment status:  "+ currentTask.state);
+			try {
+				Thread.sleep(2000); //poll period is 2s
+			} catch (InterruptedException e) {
+			}
 			
-		}while(status!=TaskStatus.done && status!=TaskStatus.error);
+		}while(currentTask.state!=TaskStatus.done && currentTask.state!=TaskStatus.error);
+		
+		if (currentTask.state==TaskStatus.error){
+			logger.error("Error ",currentTask.result); 
+		}
 		
 		//assert success
-		assertThat(status).isEqualTo(TaskStatus.done);
+		assertThat(currentTask.state).isEqualTo(TaskStatus.done);
 		
+		//now delete the on demand bosh deployment
 		
+	
 		
+	}
+	
+	@Test
+	public void testInventory(){
+		
+		List<Deployment> deployments=client.getDeployments();
+		for (Deployment depl:deployments){
+
+			client.getVms(depl.name).stream()
+			.forEach(vmf -> logger.info("vm {} {} {}/{} ",vmf.agent_id,vmf.cid,vmf.job,vmf.index));
+
+			//task bosh vms vitals si full. String vmsList=client.getVmsFormat(depl.name, "full");
+			
+			
+			
+			
+			
+			List<Vm> vms=client.getVms(depl.name);
+			vms.stream().forEach(v -> logger.info("vm: {} {}/{} ",v.agent_id,v.job,v.index));
+			
+			
+			
+			
+
+			
+		}
 		
 	}
 
