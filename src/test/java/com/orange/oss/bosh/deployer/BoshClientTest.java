@@ -2,6 +2,7 @@ package com.orange.oss.bosh.deployer;
 
 
 import java.util.List;
+import java.util.UUID;
 
 import org.fest.assertions.Assertions;
 import static org.fest.assertions.Assertions.*;
@@ -70,4 +71,23 @@ public class BoshClientTest {
 		
 	}
 
+	@Test
+	public void testCloneAndDeploy(){
+		String newDeploymentName="clone-hazelcast-"+UUID.randomUUID();
+		List<VmFull> details=this.client.cloneAndDeploy("hazelcast",newDeploymentName);
+		for (VmFull vm: details){
+			logger.info("vm status ");
+			
+			List<String> ips=vm.ips;
+			for (String ip:ips){
+				logger.info("deployed vm {}/{} : {}",vm.job_name,vm.index,ip);
+			}
+		}
+		
+		//FIXME: now delete deployment
+		this.client.deleteForceDeployment(newDeploymentName);
+		
+		
+	}
+	
 }

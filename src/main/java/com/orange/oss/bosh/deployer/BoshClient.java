@@ -3,6 +3,7 @@ package com.orange.oss.bosh.deployer;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,13 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.orange.oss.bosh.deployer.ApiMappings.SingleDeployment;
 import com.orange.oss.bosh.deployer.ApiMappings.Task;
 import com.orange.oss.bosh.deployer.ApiMappings.TaskOutput;
 import com.orange.oss.bosh.deployer.ApiMappings.TaskStatus;
 import com.orange.oss.bosh.deployer.ApiMappings.VmFull;
-import com.orange.oss.bosh.deployer.ApiMappings.VmsFull;
+import com.orange.oss.bosh.deployer.ManifestMapping.Network;
 
 
 
@@ -27,36 +27,92 @@ public class BoshClient {
 	private static Logger logger=LoggerFactory.getLogger(BoshClient.class.getName());
 	
 	@Autowired
-	BoshFeignClient client;
+	private BoshFeignClient client;
 	
 	@Autowired
-	ManifestParser parser;
+	private ManifestParser manifestParser;
 	
 	@Autowired
-	PlantUmlRender umlRenderer;
+	private PlantUmlRender umlRenderer;
 	
-	int pollingFrequencySeconds = 2; //polls director every 2s for task status
+	private int pollingFrequencySeconds = 2; //polls director every 2s for task status
 	
 	
-	
+	/**
+	 * Generates a plantuml description file, for graphic rendering
+	 * @param deploymentName
+	 * @return
+	 */
 	public String renderUml(String deploymentName){
-		
-		
-		//String deploymentName="concourse1";
 		ApiMappings.Deployment d=client.getDeployments().stream()
 				.filter(depl-> depl.name.equals(deploymentName))
 				.findFirst()
 				.get();
 		
-		
 		//parse manifest.yaml
 		SingleDeployment manifestText=client.getDeployment(deploymentName);
-		ManifestMapping.Manifest manifest=this.parser.parser(manifestText.manifest);
+		ManifestMapping.Manifest manifest=this.manifestParser.parser(manifestText.manifest);
 		
 		return this.umlRenderer.renderUml(d,manifest);
 		
 
 	}
+	
+	/**
+	 * Create a new deployment, copying an existing one.
+	 * 
+	 * @param deploymentName
+	 * @return
+	 */
+	public List<VmFull> cloneAndDeploy(String deploymentName,String  newDeploymentName){
+		
+		ApiMappings.Deployment d=client.getDeployments().stream()
+				.filter(depl-> depl.name.equals(deploymentName))
+				.findFirst()
+				.get();
+		//retrieve manifest
+		String manifest=client.getDeployment(deploymentName).manifest;
+		
+		
+		//fix manifest to clone depl
+		
+		ManifestMapping.Manifest pojoManifest=this.manifestParser.parser(manifest);
+
+		pojoManifest.name=newDeploymentName;
+		
+		//FIXME: change network ?patch network to target ondemand network
+		pojoManifest.instance_groups.forEach(ig -> {
+			Network n=new Network();
+			n.name="net-bosh-ondemand";
+			ig.networks=new ArrayList<Network>();
+			ig.networks.add(n);
+		});
+		
+		
+		String newManifest=this.manifestParser.generate(pojoManifest);
+		logger.info("generated new manifest {}",newManifest);
+		
+		
+		//now post, with flag recreate
+		
+		ApiMappings.Task task=client.createupdateDeployment(newManifest); //no use, depl name is in manifest
+
+		Task finalResultTask=this.waitForTaskDone(task, 60*20); //20mins
+		
+		//assert success
+		if (finalResultTask.state!=TaskStatus.done) {
+			logger.error("Failed deployment, ends with status {}:\n {}",finalResultTask.state,finalResultTask.result);
+			throw new IllegalArgumentException("Failed Deployment "+finalResultTask);
+		}
+		logger.info("created deployment : {}",newDeploymentName);		
+		
+		//retrieves vms and ip address
+		 List<VmFull> detailsVMs=this.detailsVMs(newDeploymentName);
+		 return detailsVMs;
+	}
+	
+	
+	
 	
 	/**
 	 * get vms details for a given deployment
@@ -95,7 +151,30 @@ public class BoshClient {
 	}
 
 
-	private void waitForTaskDone(Task task, int timeoutSeconds) {
+	/**
+	 * Force delete a bosh deployment
+	 * 
+	 * @param newDeploymentName
+	 */
+	public void deleteForceDeployment(String deploymentName) {
+		Task deleteTask=this.client.deleteDeployments(deploymentName, true);
+		Task finalResultTask=this.waitForTaskDone(deleteTask, 60*20); //20mins
+		//assert success
+		if (finalResultTask.state!=TaskStatus.done) {
+			logger.error("Delete deployment Failed, ends with status {}:\n {}",finalResultTask.state,finalResultTask.result);
+			throw new IllegalArgumentException("Delete Deployment Failed "+finalResultTask);
+		}
+		logger.info("deleted deployment : {}",deploymentName);
+	}
+	
+	/**
+	 * polls the director, waiting for task to be done
+	 * @param task
+	 * @param timeoutSeconds
+	 * @return
+	 */
+	
+	private Task waitForTaskDone(Task task, int timeoutSeconds) {
 		int taskId=task.id;
 		
 		//Pool task for deploy done
@@ -115,8 +194,9 @@ public class BoshClient {
 			logger.error("Error ",currentTask.result);
 		}
 		
+		return currentTask;
+		
 	}
-	
 	
 	
 	

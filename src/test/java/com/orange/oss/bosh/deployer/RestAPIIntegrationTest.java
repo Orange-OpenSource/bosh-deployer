@@ -22,6 +22,7 @@ import com.orange.oss.bosh.deployer.ApiMappings.SingleDeployment;
 import com.orange.oss.bosh.deployer.ApiMappings.Task;
 import com.orange.oss.bosh.deployer.ApiMappings.TaskStatus;
 import com.orange.oss.bosh.deployer.ApiMappings.Vm;
+import com.orange.oss.bosh.deployer.ApiMappings.VmFull;
 import com.orange.oss.bosh.deployer.ManifestMapping.Network;
 
 
@@ -93,7 +94,7 @@ public class RestAPIIntegrationTest {
 	public void testBoshDeployRecreate(){
 		
 		String deploymentName="hazelcast";
-		//String deploymentName="concourse1";
+
 		ApiMappings.Deployment d=client.getDeployments().stream()
 				.filter(depl-> depl.name.equals(deploymentName))
 				.findFirst()
@@ -145,9 +146,6 @@ public class RestAPIIntegrationTest {
 		//assert success
 		assertThat(currentTask.state).isEqualTo(TaskStatus.done);
 		
-		//now delete the on demand bosh deployment
-		
-	
 		
 	}
 	
