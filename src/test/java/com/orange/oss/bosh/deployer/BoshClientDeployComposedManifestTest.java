@@ -1,7 +1,9 @@
 package com.orange.oss.bosh.deployer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -105,6 +107,19 @@ public class BoshClientDeployComposedManifestTest {
 		instanceIG.jobs.add(instanceJob);
 		
 		
+		Map properties=new HashMap<String,String>();
+		properties.put("hazelcast.jvm.memoryMo", "3000");
+		properties.put("hazelcast.group.name", "hz-group");
+		properties.put("hazelcast.group.password", "eentepAxHo");
+		
+		//generate Json/Yaml map structure from flat properties
+		instanceIG.properties=PropertyMapper.map(properties);
+		
+		
+		
+		
+				
+
 		manifest.instance_groups.add(instanceIG);
 		}
 		
@@ -132,6 +147,11 @@ public class BoshClientDeployComposedManifestTest {
 		//deploy
 		this.client.deploy(manifest);
 		logger.info("successfully deployed!");
+		
+		
+		
+		
+		
 		//delete
 		this.client.deleteForceDeployment(deploymentName);
 		logger.info("successfully deleted !");

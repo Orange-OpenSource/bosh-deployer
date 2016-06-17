@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {ManifestParser.class})
 
@@ -108,11 +111,17 @@ public class ManifestParserTest {
 		assertThat(m.instance_groups.get(0).jobs.get(0).consumes).isNotEmpty();
 		assertThat(m.instance_groups.get(0).jobs.get(0).provides).isNotEmpty();
 		
-		assertThat(m.instance_groups.get(0).jobs.get(0).properties).isNotEmpty();
-		assertThat(m.instance_groups.get(0).jobs.get(0).properties.get("prop1")).isEqualTo("valueprop1");
+		assertThat(m.instance_groups.get(0).jobs.get(0).properties).isNotNull();
 		
-		Map subpros=(Map) m.instance_groups.get(0).jobs.get(0).properties.get("prop2");
-		assertThat(subpros.get("prop2_1")).isEqualTo("value_prop2_1");
+		//FIXME: parse properties inside Rawjson
+		Object nodeProps=m.instance_groups.get(0).jobs.get(0).properties;
+		Map props=(Map) nodeProps;
+		String prop1Value=(String) props.get("prop1");
+		assertThat(prop1Value).isEqualTo("valueprop1");
+		
+		Map props2=(Map) props.get("prop2");
+		String prop21value=(String) props2.get("prop2_1");
+		assertThat(prop21value).isEqualTo("value_prop2_1");
 		
 	}
 	

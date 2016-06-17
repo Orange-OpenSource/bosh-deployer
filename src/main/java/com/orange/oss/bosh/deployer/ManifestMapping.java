@@ -13,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public class ManifestMapping {
 
 	public static class Manifest {
+
+		
 		public String director_uuid;
 		public String name;
 		public List<Release> releases;
@@ -20,8 +22,23 @@ public class ManifestMapping {
 		public List<Stemcell> stemcells;
 		public List<InstanceGroup> instance_groups;
 		
-		public Map<String,Object> properties=new HashMap<String,Object>(); // yaml structure		
+		//see: http://yuluer.com/page/ehidecb-how-can-i-include-raw-json-in-an-object-using-jackson.shtml
+//		public Map<String,Object> properties=new HashMap<String,Object>(); // yaml structure
+//		@JsonIgnore
+//		Object props;
+//		
+//		@JsonRawValue
+//		public String getProperties() {
+//			return props == null ? "[]" : props.toString();
+//		}
+//
+//		public void setProperties(JsonNode node) {
+//			this.props = node;
+//		}
+		
+		public Object properties=new HashMap<String, Object>();
 
+		
 	}
 
 	public static class Release {
@@ -59,7 +76,25 @@ public class ManifestMapping {
 		public List<String> azs;// [z1]
 		public List<Network> networks;
 		public List<Job> jobs;
-		public Map<String,Object> properties=new HashMap<String,Object>();; // deprecated in favor of job level properties
+		
+		
+		//see: http://yuluer.com/page/ehidecb-how-can-i-include-raw-json-in-an-object-using-jackson.shtml
+		
+//		@JsonIgnore
+//		Object props;
+//		
+//		@JsonRawValue
+//		public String getProperties() {
+//			return props == null ? "[]" : props.toString();
+//		}
+//
+//		public void setProperties(JsonNode node) {
+//			this.props = node;
+//		}
+		
+		public Object properties=new HashMap<String, Object>();
+
+		//public Map<String,Object> properties=new HashMap<String,Object>();; // deprecated in favor of job level properties
 	}
 
 	public static class Network {
@@ -72,10 +107,28 @@ public class ManifestMapping {
 		
 		public Map<String,Object> consumes=new HashMap<String, Object>(); //FIXME: correctly parse link
 		public Map<String,Object> provides=new HashMap<String, Object>(); ////FIXME: correctly parse link
-		public Map<String,Object> properties=new HashMap<String,Object>();// job level properties
+		
+		
+		//public Map<String,Object> properties=new HashMap<String,Object>();// job level properties
+		//see: http://yuluer.com/page/ehidecb-how-can-i-include-raw-json-in-an-object-using-jackson.shtml
+//		public Map<String,Object> properties=new HashMap<String,Object>(); // yaml structure
+//		@JsonIgnore
+//		Object props;
+//		@JsonRawValue
+//		public String getProperties() {
+//			return props == null ? "[]" : props.toString();
+//		}
+//		public void setProperties(JsonNode node) {
+//			this.props = node;
+//		}
+		public Object properties=new HashMap<String, Object>();
+
+		
 		
 //		public List<Link> consumes; //FIXME: correctly parse link
 //		public List<Link> provides; ////FIXME: correctly parse link
+		
+		
 	}
 
 	public static class Link {
