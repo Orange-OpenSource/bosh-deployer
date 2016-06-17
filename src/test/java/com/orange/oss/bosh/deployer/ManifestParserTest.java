@@ -1,13 +1,12 @@
 package com.orange.oss.bosh.deployer;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Map;
 
 import org.fest.assertions.Assertions;
-import org.hamcrest.core.IsNull;
-
-import static org.fest.assertions.Assertions.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -16,9 +15,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {ManifestParser.class})
 

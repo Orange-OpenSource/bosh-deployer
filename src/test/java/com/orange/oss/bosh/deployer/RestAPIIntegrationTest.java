@@ -4,7 +4,6 @@ import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 import org.junit.Test;
@@ -22,7 +21,6 @@ import com.orange.oss.bosh.deployer.ApiMappings.SingleDeployment;
 import com.orange.oss.bosh.deployer.ApiMappings.Task;
 import com.orange.oss.bosh.deployer.ApiMappings.TaskStatus;
 import com.orange.oss.bosh.deployer.ApiMappings.Vm;
-import com.orange.oss.bosh.deployer.ApiMappings.VmFull;
 import com.orange.oss.bosh.deployer.ManifestMapping.Network;
 
 

@@ -1,8 +1,9 @@
 package com.orange.oss.bosh.deployer;
 
+import static org.fest.assertions.Assertions.assertThat;
+
 import java.util.HashMap;
 import java.util.Map;
-import static org.fest.assertions.Assertions.*;
 
 import org.junit.Test;
 
