@@ -1,4 +1,4 @@
-package com.orange.oss.bosh.deployer;
+package com.orange.oss.bosh.deployer.manifest;
 
 import java.io.IOException;
 
@@ -10,7 +10,7 @@ import org.yaml.snakeyaml.Yaml;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.orange.oss.bosh.deployer.ManifestMapping.Manifest;
+import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Manifest;
 
 
 /**

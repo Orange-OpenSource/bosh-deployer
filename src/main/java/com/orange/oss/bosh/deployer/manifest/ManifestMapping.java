@@ -1,4 +1,4 @@
-package com.orange.oss.bosh.deployer;
+package com.orange.oss.bosh.deployer.manifest;
 
 import java.util.HashMap;
 import java.util.List;

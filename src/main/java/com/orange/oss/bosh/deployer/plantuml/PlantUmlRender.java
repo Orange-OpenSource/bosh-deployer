@@ -1,4 +1,4 @@
-package com.orange.oss.bosh.deployer;
+package com.orange.oss.bosh.deployer.plantuml;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,6 +6,10 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
+
+import com.orange.oss.bosh.deployer.ApiMappings;
+import com.orange.oss.bosh.deployer.ApiMappings.Deployment;
+import com.orange.oss.bosh.deployer.manifest.ManifestMapping;
 
 @Configuration
 public class PlantUmlRender {

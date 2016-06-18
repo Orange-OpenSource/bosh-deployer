@@ -1,49 +1,62 @@
-package com.orange.oss.bosh.deployer;
+package com.orange.oss.bosh.deployer.manifest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.stereotype.Component;
 
-import com.orange.oss.bosh.deployer.ManifestMapping.InstanceGroup;
-import com.orange.oss.bosh.deployer.ManifestMapping.Job;
-import com.orange.oss.bosh.deployer.ManifestMapping.Manifest;
-import com.orange.oss.bosh.deployer.ManifestMapping.Network;
-import com.orange.oss.bosh.deployer.ManifestMapping.Release;
-import com.orange.oss.bosh.deployer.ManifestMapping.Stemcell;
-import com.orange.oss.bosh.deployer.ManifestMapping.Update;
+import com.orange.oss.bosh.deployer.ApiMappings;
+import com.orange.oss.bosh.deployer.BoshClient;
+import com.orange.oss.bosh.deployer.BoshFeignClient;
+import com.orange.oss.bosh.deployer.ApiMappings.Info;
+import com.orange.oss.bosh.deployer.manifest.ManifestMapping.InstanceGroup;
+import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Job;
+import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Manifest;
+import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Network;
+import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Release;
+import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Stemcell;
+import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Update;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {BoshDeployerApplication.class})
-@WebIntegrationTest({"server.port=0", "management.port=0"})
-@ActiveProfiles("integration")
 
-public class BoshClientDeployComposedManifestTest {
+/**
+ * Generates a deployment manifest from  compact parameters, and adapted default
+ * - same stemcell, from cloud config
+ * - latest releases
+ * - expecting bosh 2 links autowiring between jobs of the deployment
+ * - different strategies tbd (ie: public ip, ip exposed with route registrar, max in flight, consul dns registration)
+ * 
+ * 
+ * @author poblin-orange
+ *
+ */
+
+@Component
+public class ManifestComposer {
+
+	private static Logger logger=LoggerFactory.getLogger(ManifestComposer.class.getName());	
+	
+	private static final String vmType = "default";
+	private static final String netName = "net-bosh-ondemand";
+	private static final String stemcellOs = "ubuntu-trusty";
+	private static final String stemcellAlias = "trusty";
 
 	@Autowired
-	BoshClient client;
-	
+	BoshClient boshClient;
 	
 	@Autowired
-	BoshFeignClient feignClient;
+	BoshFeignClient boshFeignClient;
 	
 	@Autowired
 	ManifestParser manifestParser;
 	
-	private static Logger logger=LoggerFactory.getLogger(BoshClientDeployComposedManifestTest.class.getName());
-	@Test
-	public void testDeployComposedManifest() {
-		ApiMappings.Info info=feignClient.getInfo();
+	
+	public Manifest composeBoshManifest(DeploymentSpec spec){
+		ApiMappings.Info info=boshFeignClient.getInfo();
 		String uuid=info.uuid;
 		String deploymentName="composed-hazelcast";
 		
@@ -62,8 +75,8 @@ public class BoshClientDeployComposedManifestTest {
 		//stemcells
 		manifest.stemcells=new ArrayList<Stemcell>();
 		ManifestMapping.Stemcell stemcell=new Stemcell();
-		stemcell.alias="trusty";
-		stemcell.os="ubuntu-trusty";
+		stemcell.alias=stemcellAlias;
+		stemcell.os=stemcellOs;
 		stemcell.version="latest";
 		manifest.stemcells.add(stemcell);
 		
@@ -79,7 +92,7 @@ public class BoshClientDeployComposedManifestTest {
 		//network and az for instance groups
 		List<Network> hzNetWorks=new ArrayList<Network>();
 		Network net=new Network();
-		net.name="net-bosh-ondemand";
+		net.name=netName;
 		hzNetWorks.add(net);
 		
 		List<String> azs=new ArrayList<String>();
@@ -96,8 +109,8 @@ public class BoshClientDeployComposedManifestTest {
 		instanceIG.name="hazelcast-instances";
 		
 		instanceIG.networks=hzNetWorks;
-		instanceIG.stemcell="trusty";
-		instanceIG.vm_type="default";
+		instanceIG.stemcell=stemcellAlias;
+		instanceIG.vm_type=vmType;
 		
 		
 		Job instanceJob=new Job();
@@ -113,7 +126,7 @@ public class BoshClientDeployComposedManifestTest {
 		properties.put("hazelcast.group.password", "eentepAxHo");
 		
 		//generate Json/Yaml map structure from flat properties
-		instanceIG.properties=PropertyMapper.map(properties);
+		instanceJob.properties=PropertyMapper.map(properties);
 		
 		
 		
@@ -130,8 +143,8 @@ public class BoshClientDeployComposedManifestTest {
 		managerIG.name="manager";
 		
 		managerIG.networks=hzNetWorks;
-		managerIG.stemcell="trusty";
-		managerIG.vm_type="default";
+		managerIG.stemcell=stemcellAlias;
+		managerIG.vm_type=vmType;
 
 		Job managerJob=new Job();
 		managerJob.name="hazelcast_mancenter";
@@ -143,20 +156,9 @@ public class BoshClientDeployComposedManifestTest {
 		}
 		
 		logger.info("composed manifest:\n{}",manifestParser.generate(manifest));
-		
-		//deploy
-		this.client.deploy(manifest);
-		logger.info("successfully deployed!");
-		
-		
-		
-		
-		
-		//delete
-		this.client.deleteForceDeployment(deploymentName);
-		logger.info("successfully deleted !");
-		
-		
-	}
+		return manifest;
 
+	}
+	
+	
 }

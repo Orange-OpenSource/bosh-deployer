@@ -21,7 +21,9 @@ import com.orange.oss.bosh.deployer.ApiMappings.SingleDeployment;
 import com.orange.oss.bosh.deployer.ApiMappings.Task;
 import com.orange.oss.bosh.deployer.ApiMappings.TaskStatus;
 import com.orange.oss.bosh.deployer.ApiMappings.Vm;
-import com.orange.oss.bosh.deployer.ManifestMapping.Network;
+import com.orange.oss.bosh.deployer.manifest.ManifestMapping;
+import com.orange.oss.bosh.deployer.manifest.ManifestParser;
+import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Network;
 
 
 

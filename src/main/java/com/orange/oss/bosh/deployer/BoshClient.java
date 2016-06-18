@@ -15,7 +15,10 @@ import com.orange.oss.bosh.deployer.ApiMappings.Task;
 import com.orange.oss.bosh.deployer.ApiMappings.TaskOutput;
 import com.orange.oss.bosh.deployer.ApiMappings.TaskStatus;
 import com.orange.oss.bosh.deployer.ApiMappings.VmFull;
-import com.orange.oss.bosh.deployer.ManifestMapping.Network;
+import com.orange.oss.bosh.deployer.manifest.ManifestMapping;
+import com.orange.oss.bosh.deployer.manifest.ManifestParser;
+import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Network;
+import com.orange.oss.bosh.deployer.plantuml.PlantUmlRender;
 
 
 
@@ -105,7 +108,13 @@ public class BoshClient {
 		//assert success
 		if (finalResultTask.state!=TaskStatus.done) {
 			logger.error("Failed deployment, ends with status {}:\n {}",finalResultTask.state,finalResultTask.result);
-			throw new IllegalArgumentException("Failed Deployment "+finalResultTask+ ":"+finalResultTask.result);
+			
+			//retrieve complete logs error
+			String detailledResult=client.getTaskDebug(finalResultTask.id, TaskOutput.result);
+			//FIXME: retrieve the complete result
+			
+			
+			throw new IllegalArgumentException("Failed Deployment "+finalResultTask+":"+finalResultTask.result+"\n"+detailledResult);
 		}
 		logger.info("created deployment : {}",deploymentName);		
 		
@@ -123,9 +132,7 @@ public class BoshClient {
 	public List<VmFull> deploy(ManifestMapping.Manifest manifest){
 		String deploymentName=manifest.name;
 		
-		//TODO change all release version to lastest available on director
-		
-		
+		//TODO change all release version to lastest available on director ? 
 		//TODO change all stemcell version to lastest available on director
 		// use full with bosh2 ?
 		
