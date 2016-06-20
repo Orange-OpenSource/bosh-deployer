@@ -1,5 +1,17 @@
 This component uses bosh rest API to automate programmatic deployment and update
 
+Design:
+* bosh zuul: as bosh director is usually hidden in private networks with a specific https port (25555), exposing it with an API Gateway makes sense.
+The spring cloud zuul solution is used, with an errand to push it to cloudfoundry.
+** the Bosh Director must be configured with ssl
+** authent (basic auth) is still performed by Bosh Director
+
+* Bosh API client: the spring cloud feign framework is used to map the Director REST API.
+An additional OkHttp Client is used, to able to pass http proxies and perform some adjustement to Director REST response for Feign compatibility
+
+* Cloudfoundry broker: the spring cloud cloudfoundry Service Broker implementation is used
+
+
 
 see:
 * http://bosh.io/docs/director-api-v1.html
@@ -22,7 +34,9 @@ bosh features
 cloudfoundry service broker, with spring boot
 * https://github.com/spring-cloud/spring-cloud-cloudfoundry
 * https://docs.cloudfoundry.org/services/api.html
-* 
+* swagger desc: https://github.com/cloudfoundry-incubator/cf-swagger/blob/master/descriptions/cloudfoundry/service_broker/service_broker.json#L8 
+* swagger:  tooling https://github.com/swagger-api/swagger-codegen/issues?utf8=%E2%9C%93&q=is%3Aissue+is%3Aopen+feign
+* https://github.com/swagger-api/swagger-codegen/blob/master/modules/swagger-codegen-maven-plugin/README.md
 
 consul dns reference
 * https://www.consul.io/docs/agent/dns.html
