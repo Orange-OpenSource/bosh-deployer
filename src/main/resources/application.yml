@@ -44,7 +44,7 @@ hystrix:
 
 feign:
   hystrix:
-    enabled: true
+    enabled: false
   okhttpclient:
     enabled: true
   httpclient:

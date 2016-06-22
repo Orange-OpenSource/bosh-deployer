@@ -64,6 +64,20 @@
 			<artifactId>okhttp</artifactId>
 			<version>2.5.0</version>
 		</dependency>
+		
+
+		<!--  cloudfoundry service broker support -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-cloudfoundry-service-broker</artifactId>
+		<version>1.0.0.RELEASE</version></dependency>
+
+        <dependency>
+            <groupId>com.hazelcast</groupId>
+            <artifactId>hazelcast</artifactId>
+            <version>3.6.3</version>
+        </dependency>
+		
 				
 		
 		<!-- enables ca.cert setting with env var TRUSTED_CA_CERTIFICATE: -->		
@@ -95,6 +109,77 @@
     		<scope>test</scope>	
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/io.swagger/swagger-annotations -->
+		<dependency>
+		    <groupId>io.swagger</groupId>
+		    <artifactId>swagger-annotations</artifactId>
+		    <version>1.5.9</version>
+		</dependency>
+
+		<dependency>
+		    <groupId>io.springfox</groupId>
+		    <artifactId>springfox-swagger2</artifactId>
+		    <version>2.5.0</version>
+		    <scope>test</scope>
+		</dependency>
+		
+
+	    <!-- HTTP client: jersey-client -->
+	    <dependency>
+	      <groupId>com.sun.jersey</groupId>
+	      <artifactId>jersey-client</artifactId>
+	      <scope>test</scope>
+	    </dependency>
+	    
+	    
+	    <dependency>
+	      <groupId>com.sun.jersey.contribs</groupId>
+	      <artifactId>jersey-multipart</artifactId>
+	      <version>1.19.1</version>
+	      <scope>test</scope>	      
+	    </dependency>
+	
+	    <!-- JSON processing: jackson -->
+<!-- 	    <dependency> -->
+<!-- 	      <groupId>com.fasterxml.jackson.core</groupId> -->
+<!-- 	      <artifactId>jackson-core</artifactId> -->
+<!-- 	      <scope>test</scope>	       -->
+<!-- 	    </dependency> -->
+<!-- 	    <dependency> -->
+<!-- 	      <groupId>com.fasterxml.jackson.core</groupId> -->
+<!-- 	      <artifactId>jackson-annotations</artifactId> -->
+<!-- 	      <scope>test</scope>	       -->
+<!-- 	    </dependency> -->
+<!-- 	    <dependency> -->
+<!-- 	      <groupId>com.fasterxml.jackson.core</groupId> -->
+<!-- 	      <artifactId>jackson-databind</artifactId> -->
+<!-- 	    </dependency> -->
+	    <dependency>
+	      <groupId>com.fasterxml.jackson.jaxrs</groupId>
+	      <artifactId>jackson-jaxrs-json-provider</artifactId>
+	      <scope>test</scope>	      
+	    </dependency>
+	    <dependency>
+	      <groupId>com.fasterxml.jackson.datatype</groupId>
+	      <artifactId>jackson-datatype-joda</artifactId>
+	      <scope>test</scope>	      
+	    </dependency>
+	    <dependency>
+	      <groupId>joda-time</groupId>
+	      <artifactId>joda-time</artifactId>
+	      <scope>test</scope>	      
+	    </dependency>
+	
+	    <!-- Base64 encoding that works in both JVM and Android -->
+	    <dependency>
+	      <groupId>com.brsanthu</groupId>
+	      <artifactId>migbase64</artifactId>
+	      <version>2.2</version>
+	      <scope>test</scope>	      
+	    </dependency>
+		
+		
+
 	</dependencies>
 	
 	<dependencyManagement>
@@ -108,6 +193,39 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<pluginRepositories>
+
+<!-- 		<pluginRepository> -->
+<!-- 			<id>jcenter</id> -->
+<!-- 			<name>JCenter-Bintray</name> -->
+<!-- 			<url>http://jcenter.bintray.com</url> -->
+<!-- 			<snapshots> -->
+<!-- 				<enabled>false</enabled> -->
+<!-- 			</snapshots> -->
+<!-- 		</pluginRepository> -->
+		
+<!-- 		<pluginRepository> -->
+<!-- 			<id>jfrog-oss-snapshots</id> -->
+<!-- 			<name>JFrog OSS Snapshots</name> -->
+<!-- 			<url>http://oss.jfrog.org/artifactory/oss-snapshot-local</url> -->
+<!-- 			<releases> -->
+<!-- 				<enabled>false</enabled> -->
+<!-- 			</releases> -->
+<!-- 		</pluginRepository> -->
+
+		<pluginRepository>
+            <id>sonatype-snapshots</id>
+			<name>Sonatype Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        	<releases>
+				<enabled>false</enabled>
+			</releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+		</pluginRepository>
+		
+	</pluginRepositories>
 	
 	<build>
 		<plugins>
@@ -115,6 +233,28 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
+<!-- 			<plugin> -->
+<!-- 			    <groupId>io.swagger</groupId> -->
+<!-- 			    <artifactId>swagger-codegen-maven-plugin</artifactId> -->
+<!-- 			    <version>2.2.0-SNAPSHOT</version>			     -->
+<!-- 					<executions> -->
+<!-- 						<execution> -->
+<!-- 							<goals> -->
+<!-- 								<goal>generate</goal> -->
+<!-- 							</goals> -->
+<!-- 							<configuration> -->
+<!-- 								<inputSpec>src/test/resources/swagger-broker/service_broker.json</inputSpec> -->
+<!-- 								<language>springboot</language> -->
+<!-- 								<library>feign</library> -->
+<!-- 								<apiPackage>com.orange.oss.bosh.deployer.cfbroker.swagger</apiPackage> -->
+<!-- 								<configOptions> -->
+<!-- 									<sourceFolder>src/test/java</sourceFolder> -->
+<!-- 								</configOptions> -->
+<!-- 							</configuration> -->
+<!-- 						</execution> -->
+<!-- 					</executions> -->
+<!--     			</plugin>			 -->
 		</plugins>
 	</build>
 	

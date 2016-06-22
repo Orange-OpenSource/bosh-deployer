@@ -26,10 +26,12 @@ public class DeploymentSpec {
 		public boolean exposeWithRouteRegistrar=false;
 		public boolean exposeAsVip=false;
 		public boolean useMultipleAzs=false;
+		public boolean exposeAsServiceInstanceIp=true;
+		public boolean exposeAsDashBoard=false;
 		
 		//properties, key is flat dot separated key (ww.xx.yy), bosh job sec format and value is String
 		public Map<String, String> properties;
-		public Map<String, String> randomCredentials;
+		public List<String> randomCredentials;
 		
 	}
 	
