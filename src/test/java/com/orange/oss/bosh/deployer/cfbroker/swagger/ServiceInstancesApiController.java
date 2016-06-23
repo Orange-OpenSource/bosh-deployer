@@ -25,7 +25,7 @@ import java.util.List;
 
 @javax.annotation.Generated(value = "class io.swagger.codegen.languages.SpringBootServerCodegen", date = "2016-06-22T19:08:11.087+02:00")
 @Controller
-public class ServiceInstancesApiController implements ServiceInstancesApi {
+public abstract class ServiceInstancesApiController implements ServiceInstancesApi {
 
     public ResponseEntity<DashboardUrl> createServiceInstance(@ApiParam(value = "The instance_id of a service instance is provided by the Cloud Controller. This ID will be used for future requests (bind and deprovision), so the broker must use it to correlate the resource it creates.",required=true ) @PathVariable("instanceId") String instanceId,
         @ApiParam(value = "Service information." ,required=true ) @RequestBody Service service) {

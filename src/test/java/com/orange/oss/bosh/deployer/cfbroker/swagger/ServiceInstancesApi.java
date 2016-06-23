@@ -34,7 +34,7 @@ public interface ServiceInstancesApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    ResponseEntity<DashboardUrl> createServiceInstance(@ApiParam(value = "The instance_id of a service instance is provided by the Cloud Controller. This ID will be used for future requests (bind and deprovision), so the broker must use it to correlate the resource it creates.",required=true ) @PathVariable("instanceId") String instanceId,
+    ResponseEntity<DashboardUrl> createServiceInstance(@ApiParam(value = "The instance_id of a service instance is provided by the Cloud Controller. This ID will be used for future requests (bind and deprovision), so the broker must use it to correlate the resource it creates.",required=true ) @PathVariable("instance_id") String instanceId,
         @ApiParam(value = "Service information." ,required=true ) @RequestBody Service service);
 
 
@@ -45,7 +45,7 @@ public interface ServiceInstancesApi {
     @RequestMapping(value = "/service_instances/{instance_id}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    ResponseEntity<Empty> deprovisionServiceInstance(@ApiParam(value = "The instance_id of a service instance is provided by the Cloud Controller. This ID will be used for future requests (bind and deprovision), so the broker must use it to correlate the resource it creates.",required=true ) @PathVariable("instanceId") String instanceId,
+    ResponseEntity<Empty> deprovisionServiceInstance(@ApiParam(value = "The instance_id of a service instance is provided by the Cloud Controller. This ID will be used for future requests (bind and deprovision), so the broker must use it to correlate the resource it creates.",required=true ) @PathVariable("instance_id") String instanceId,
         @ApiParam(value = "Parameters to identify the service to be deprovisioned" ,required=true ) @RequestBody UnbindParameters deprovisionParameters);
 
 
@@ -58,8 +58,8 @@ public interface ServiceInstancesApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PUT)
-    ResponseEntity<BindingResponse> serviceBind(@ApiParam(value = "The instance_id of a service instance is provided by the Cloud Controller. This ID will be used for future requests (bind and deprovision), so the broker must use it to correlate the resource it creates.",required=true ) @PathVariable("instanceId") String instanceId,
-        @ApiParam(value = "The binding_id of a service binding is provided by the Cloud Controller.",required=true ) @PathVariable("bindingId") String bindingId,
+    ResponseEntity<BindingResponse> serviceBind(@ApiParam(value = "The instance_id of a service instance is provided by the Cloud Controller. This ID will be used for future requests (bind and deprovision), so the broker must use it to correlate the resource it creates.",required=true ) @PathVariable("instance_id") String instanceId,
+        @ApiParam(value = "The binding_id of a service binding is provided by the Cloud Controller.",required=true ) @PathVariable("binding_id") String bindingId,
         @ApiParam(value = "" ,required=true ) @RequestBody Binding binding);
 
 
@@ -70,8 +70,8 @@ public interface ServiceInstancesApi {
     @RequestMapping(value = "/service_instances/{instance_id}/service_bindings/{binding_id}",
         produces = { "application/json" }, 
         method = RequestMethod.DELETE)
-    ResponseEntity<Empty> serviceUnbind(@ApiParam(value = "The instance_id of a service instance is provided by the Cloud Controller. This ID will be used for future requests (bind and deprovision), so the broker must use it to correlate the resource it creates.",required=true ) @PathVariable("instanceId") String instanceId,
-        @ApiParam(value = "The binding_id of a service binding is provided by the Cloud Controller.",required=true ) @PathVariable("bindingId") String bindingId,
+    ResponseEntity<Empty> serviceUnbind(@ApiParam(value = "The instance_id of a service instance is provided by the Cloud Controller. This ID will be used for future requests (bind and deprovision), so the broker must use it to correlate the resource it creates.",required=true ) @PathVariable("instance_id") String instanceId,
+        @ApiParam(value = "The binding_id of a service binding is provided by the Cloud Controller.",required=true ) @PathVariable("binding_id") String bindingId,
         @ApiParam(value = "" ,required=true ) @RequestBody UnbindParameters unbindParameters);
 
 
@@ -83,7 +83,7 @@ public interface ServiceInstancesApi {
         produces = { "application/json" }, 
         consumes = { "application/json" },
         method = RequestMethod.PATCH)
-    ResponseEntity<Empty> updateServiceInstance(@ApiParam(value = "The instance_id of a service instance is provided by the Cloud Controller. This ID will be used for future requests (bind and deprovision), so the broker must use it to correlate the resource it creates.",required=true ) @PathVariable("instanceId") String instanceId,
+    ResponseEntity<Empty> updateServiceInstance(@ApiParam(value = "The instance_id of a service instance is provided by the Cloud Controller. This ID will be used for future requests (bind and deprovision), so the broker must use it to correlate the resource it creates.",required=true ) @PathVariable("instance_id") String instanceId,
         @ApiParam(value = "New Plan information." ,required=true ) @RequestBody ServicePlan plan);
 
 }
