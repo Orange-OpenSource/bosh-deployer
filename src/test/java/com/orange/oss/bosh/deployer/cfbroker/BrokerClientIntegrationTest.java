@@ -14,6 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.orange.oss.bosh.deployer.BoshDeployerApplication;
 
 import io.swagger.model.CatalogServices;
+import io.swagger.model.Services;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -42,7 +43,13 @@ public class BrokerClientIntegrationTest {
 //		Assertions.assertThat(cat).isNotEmpty();
 		
 		ResponseEntity<CatalogServices> cat2=catalog.catalog();
-		Assertions.assertThat(cat2).isNotNull();		
+		Assertions.assertThat(cat2).isNotNull();
+		
+		Services service=cat2.getBody().getServices().get(0);
+		Assertions.assertThat(service).isNotNull();
+		Assertions.assertThat(service.getBindable()).isTrue();
+		
+		
 	}
 
 }
