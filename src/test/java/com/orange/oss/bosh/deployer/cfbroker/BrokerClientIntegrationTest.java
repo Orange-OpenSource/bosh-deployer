@@ -7,9 +7,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -17,13 +14,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.orange.oss.bosh.deployer.BoshDeployerApplication;
 
 import io.swagger.model.Binding;
-import io.swagger.model.BindingResponse;
 import io.swagger.model.CatalogServices;
 import io.swagger.model.DashboardUrl;
 import io.swagger.model.Parameter;
 import io.swagger.model.Plan;
 import io.swagger.model.Services;
-import scala.annotation.meta.setter;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @RunWith(SpringJUnit4ClassRunner.class)

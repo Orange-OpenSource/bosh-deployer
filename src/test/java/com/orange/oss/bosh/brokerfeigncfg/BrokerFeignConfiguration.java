@@ -32,10 +32,10 @@ public class BrokerFeignConfiguration {
 	private int proxyPort;
 	
 	
-	@Value("${test.broker.user}")
+	@Value("${broker.user}")
 	String brokerUser;
 
-	@Value("${test.broker.password}")
+	@Value("${broker.password}")
 	String brokerPassword;
 
 	
