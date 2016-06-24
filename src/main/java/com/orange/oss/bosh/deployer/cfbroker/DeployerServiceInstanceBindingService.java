@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008-2016, Hazelcast, Inc. All Rights Reserved.
+ * Copyright (c) 2008-2016, Orange, Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,58 +17,54 @@
 
 package com.orange.oss.bosh.deployer.cfbroker;
 
-import org.springframework.cloud.servicebroker.exception.ServiceBrokerException;
-import org.springframework.cloud.servicebroker.exception.ServiceInstanceBindingExistsException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.servicebroker.model.CreateServiceInstanceBindingRequest;
 import org.springframework.cloud.servicebroker.model.CreateServiceInstanceBindingResponse;
 import org.springframework.cloud.servicebroker.model.DeleteServiceInstanceBindingRequest;
-import org.springframework.cloud.servicebroker.model.DeleteServiceInstanceResponse;
-import org.springframework.cloud.servicebroker.model.ServiceInstanceBinding;
 import org.springframework.cloud.servicebroker.service.ServiceInstanceBindingService;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.orange.oss.bosh.deployer.cfbroker.db.BindingRepository;
+import com.orange.oss.bosh.deployer.cfbroker.db.InstanceBinding;
+import com.orange.oss.bosh.deployer.cfbroker.db.ServiceRepository;
 
 /**
- * HazelcastServiceInstanceBindingService class
+ * Service Instance Binding broker API
  */
 @Service
 public class DeployerServiceInstanceBindingService implements ServiceInstanceBindingService {
 
-    private DeployerServiceRepository repository;
+	@Autowired
+    private ServiceRepository serviceRepository;
+	
+	@Autowired
+    private BindingRepository bindingRepository;
+	
 
-    public DeployerServiceInstanceBindingService() {
-        repository = DeployerServiceRepository.getInstance();
-    }
 
     @Override
     public CreateServiceInstanceBindingResponse createServiceInstanceBinding(CreateServiceInstanceBindingRequest
-                createServiceInstanceBindingRequest)  {
-        String id = createServiceInstanceBindingRequest.getBindingId();
+                req)  {
 
-        ServiceInstanceBinding instanceBinding = repository.findServiceInstanceBinding(id);
+        InstanceBinding instanceBinding = bindingRepository.findOne(req.getServiceInstanceId());
         if (instanceBinding != null) {
             throw new IllegalArgumentException("already exist:"+instanceBinding.toString());
         }
 
-        String serviceInstanceId = createServiceInstanceBindingRequest.getServiceInstanceId();
-        DeployerServiceInstance serviceInstance = (DeployerServiceInstance) repository.findServiceInstance(serviceInstanceId);
+//        Map<String, Object> credentials = new HashMap<String, Object>();
+//        credentials.put("host", serviceInstance.getHazelcastIPAddress());
+//        credentials.put("InetAddress", serviceInstance.getHazelcastInetAddress());
+//        credentials.put("Port", serviceInstance.getHazelcastPort());
+//
+        String appGuid = req.getAppGuid();
 
-        Map<String, Object> credentials = new HashMap<String, Object>();
-        credentials.put("host", serviceInstance.getHazelcastIPAddress());
-        credentials.put("InetAddress", serviceInstance.getHazelcastInetAddress());
-        credentials.put("Port", serviceInstance.getHazelcastPort());
-
-        String appGuid = createServiceInstanceBindingRequest.getAppGuid();
-
-        instanceBinding = new ServiceInstanceBinding(id, serviceInstanceId, credentials, null, appGuid);
-        repository.saveServiceInstanceBinding(instanceBinding);
+        instanceBinding = new InstanceBinding(req.getBindingId(),req.getServiceInstanceId());
+        
+        this.bindingRepository.save(instanceBinding);
         
         //TODO: 
         // generate dedicated credentials for binding (optional, otherwhise return service instance global credentials)
         // returns connectivity name
-        
         
         return new CreateServiceInstanceBindingResponse();
         
@@ -79,9 +75,9 @@ public class DeployerServiceInstanceBindingService implements ServiceInstanceBin
            deleteServiceInstanceBindingRequest) {
         String id = deleteServiceInstanceBindingRequest.getBindingId();
 
-        ServiceInstanceBinding instanceBinding = repository.findServiceInstanceBinding(id);
+        InstanceBinding instanceBinding = this.bindingRepository.findOne(id);
         if (instanceBinding != null) {
-            repository.deleteServiceInstanceBinding(instanceBinding);
+            this.bindingRepository.delete(instanceBinding);
         }
     }
 }

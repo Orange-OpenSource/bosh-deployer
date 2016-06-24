@@ -13,7 +13,7 @@ import com.orange.oss.bosh.deployer.cfbroker.swagger.ServiceInstancesApi;
  * @author poblin-orange
  *
  */
-@FeignClient(name="broker-client",url="${test.broker.url}",configuration=com.orange.oss.bosh.brokerfeigncfg.BrokerFeignConfiguration.class)
+@FeignClient(name="services",url="${test.broker.url}",configuration=com.orange.oss.bosh.brokerfeigncfg.BrokerFeignConfiguration.class)
 public interface ServiceInstancesFeignClient extends ServiceInstancesApi {
 
 
