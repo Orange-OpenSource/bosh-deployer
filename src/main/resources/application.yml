@@ -14,6 +14,9 @@ spring:
     enabled: false
     base-url: http://zipkin-server 
 
+  jpa:
+    database: H2
+    show-sql: true
 
 security:
   ignored: /favicon.ico, /
@@ -26,6 +29,7 @@ logging:
   level:
     ROOT: INFO
     feign.Logger: DEBUG
+    feign.Contract: DEBUG
     com.orange.oss.bosh.deployer: DEBUG
     com.orange.oss.bosh.deployer.BoshFeignClient: DEBUG
     org.springframework.web.client: DEBUG
@@ -56,5 +60,10 @@ director:
   password: xxx
   proxyHost: 127.0.0.1
   proxyPort: 3128
+
+broker:
+  user: broker
+  password: xx
+
    
    
