@@ -44,7 +44,7 @@ public class BrokerClientIntegrationTest {
 	
 	
 	@Test
-	public void testBrokerLifecycle(){
+	public void testBrokerLifecycle() throws InterruptedException{
 		
 		
 		logger.info("catalog");
@@ -81,12 +81,18 @@ public class BrokerClientIntegrationTest {
 		HttpStatus statusCode=dashboard.getStatusCode();
 		Assertions.assertThat(statusCode).isEqualTo(HttpStatus.ACCEPTED); //ie 202, async processing
 		
-		
-		
-		
 		//now poll until service ready
+		String state=LastOperationState.IN_PROGRESS.toString();
+		while (state.equals(LastOperationState.IN_PROGRESS.toString())){
+			Thread.sleep(2000);//fixed, cf polling frequency is 30s
+			ResponseEntity<LastOperationResponse> stateResponse=services.lastOperation(instanceId);
+			logger.info("state is : {} : {}",stateResponse.getBody().getState(),stateResponse.getBody().getDescription());
+			state=stateResponse.getBody().getState();
+		}
 		
-//		services.lastOperation(instanceId,null);
+		Assertions.assertThat(state).isEqualTo(LastOperationState.SUCCEEDED.toString());
+		logger.info("Succeeded provisionning service");
+		
 		
 		
 		//bind the service
