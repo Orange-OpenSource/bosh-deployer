@@ -17,6 +17,8 @@
 
 package com.orange.oss.bosh.deployer.cfbroker;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.servicebroker.exception.ServiceInstanceDoesNotExistException;
 import org.springframework.cloud.servicebroker.exception.ServiceInstanceExistsException;
@@ -33,9 +35,18 @@ import org.springframework.cloud.servicebroker.service.ServiceInstanceService;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import com.orange.oss.bosh.deployer.ApiMappings.Task;
+import com.orange.oss.bosh.deployer.ApiMappings.TaskStatus;
 import com.orange.oss.bosh.deployer.BoshClient;
 import com.orange.oss.bosh.deployer.cfbroker.db.Instance;
 import com.orange.oss.bosh.deployer.cfbroker.db.ServiceRepository;
+import com.orange.oss.bosh.deployer.manifest.DeploymentSpec;
+import com.orange.oss.bosh.deployer.manifest.DeploymentSpecFactory;
+import com.orange.oss.bosh.deployer.manifest.ManifestComposer;
+import com.orange.oss.bosh.deployer.manifest.ManifestMapping;
+import com.orange.oss.bosh.deployer.manifest.ManifestParser;
+
+
 /**
  * Service Instance broker API
  */
@@ -43,9 +54,19 @@ import com.orange.oss.bosh.deployer.cfbroker.db.ServiceRepository;
 @Component
 public class DeployerServiceInstanceService implements ServiceInstanceService  {
 
+	private static Logger logger=LoggerFactory.getLogger(DeployerServiceInstanceService.class.getName());
 
 	@Autowired
     private ServiceRepository serviceRepository;
+
+	@Autowired
+	private ManifestComposer manifestComposer;
+	
+	@Autowired
+	private ManifestParser manifestParser;
+	
+	@Autowired
+	private DeploymentSpecFactory deploymentSpecFactory;
 	
     @Autowired
     BoshClient boshClient;
@@ -67,6 +88,16 @@ public class DeployerServiceInstanceService implements ServiceInstanceService  {
 
         serviceInstance = new Instance(req.getServiceInstanceId());
         
+        DeploymentSpec spec=this.deploymentSpecFactory.spec();
+        
+		//launch create task
+        ManifestMapping.Manifest manifest=this.manifestComposer.composeBoshManifest(spec);
+		String deploymentName="on-demande-"+serviceInstance.getServiceInstanceId();
+		String textManifest=this.manifestParser.generate(manifest);
+		int taskId=this.boshClient.asyncDeploy(deploymentName, textManifest);
+		
+		//keep task id for future last operation lookup
+		serviceInstance.setLastTaskId(taskId);
 
 //        HazelcastInstance hazelcastInstance = hazelcastAdmin.createHazelcastInstance(
 //                createServiceInstanceRequest.getServiceInstanceId());
@@ -135,13 +166,32 @@ public class DeployerServiceInstanceService implements ServiceInstanceService  {
         if (serviceInstance==null){
         	throw new  ServiceInstanceDoesNotExistException("Service Instance unknow");
         }
+        
+        
 		
 		
 		
-		OperationState state=OperationState.IN_PROGRESS;
-		//TODO check id -> succeeded or failed.
 		//this is the polling from cf expecting async provisionning to transition to finished or error state
-		return new GetLastServiceOperationResponse().withOperationState(state);
+		
+		Integer taskId=serviceInstance.getLastTaskId();
+		if (taskId==null){
+			logger.error("unknown last task id for service instance {}",serviceInstanceId);
+			return new GetLastServiceOperationResponse().withOperationState(OperationState.FAILED);
+		}
+		
+		//FIXME: if director acces technically KO, return in progress ?
+		
+		//now get task from director
+		Task t=this.boshClient.getTask(taskId);
+		switch (t.state){
+		case done : new GetLastServiceOperationResponse().withOperationState(OperationState.SUCCEEDED);break; 
+		case error: new GetLastServiceOperationResponse().withOperationState(OperationState.FAILED);break;
+		case processing: new GetLastServiceOperationResponse().withOperationState(OperationState.IN_PROGRESS);break;
+		case queued: new GetLastServiceOperationResponse().withOperationState(OperationState.IN_PROGRESS);break;
+		default: logger.error("unknow task status {}");
+		}
+		
+		return new GetLastServiceOperationResponse().withOperationState(OperationState.IN_PROGRESS);
 	}
 
 }

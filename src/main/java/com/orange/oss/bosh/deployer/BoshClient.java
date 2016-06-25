@@ -122,6 +122,22 @@ public class BoshClient {
 		 List<VmFull> detailsVMs=this.detailsVMs(deploymentName);
 		 return detailsVMs;
 	}
+
+	
+	/**
+	 * simple aync deployment
+	 * @param deploymentName
+	 * @param manifest
+	 * @return the bosh task Id
+	 */
+	public int asyncDeploy(String deploymentName, String manifest) {
+		ApiMappings.Task task=client.createupdateDeployment(manifest); 
+		logger.info("launched deployment : {}. Task Id is {}",deploymentName,task.id);		
+		return task.id;
+	}
+	
+	
+	
 	
 	/**
 	 * deploys a manifest.
@@ -224,6 +240,13 @@ public class BoshClient {
 		
 		return currentTask;
 		
+	}
+	/**
+	 * retrieve a task from director
+	 * @param taskId
+	 */
+	public Task getTask(int taskId) {
+		return this.client.getTask(taskId);
 	}
 	
 	

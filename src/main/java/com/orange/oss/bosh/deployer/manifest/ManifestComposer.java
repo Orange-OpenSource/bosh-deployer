@@ -127,12 +127,6 @@ public class ManifestComposer {
 		
 		//generate Json/Yaml map structure from flat properties
 		instanceJob.properties=PropertyMapper.map(properties);
-		
-		
-		
-		
-				
-
 		manifest.instance_groups.add(instanceIG);
 		}
 		
