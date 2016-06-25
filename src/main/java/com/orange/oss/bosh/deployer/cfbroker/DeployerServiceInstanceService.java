@@ -189,14 +189,16 @@ public class DeployerServiceInstanceService implements ServiceInstanceService  {
 		//now get task from director
     	logger.info("Getting bosh task status, task {}, service instance {}",taskId,req.getServiceInstanceId());		
 		Task t=this.boshClient.getTask(taskId);
+		
+		OperationState status=null;
 		switch (t.state){
-		case done : new GetLastServiceOperationResponse().withOperationState(OperationState.SUCCEEDED);break; 
-		case error: new GetLastServiceOperationResponse().withOperationState(OperationState.FAILED);break;
-		case processing: new GetLastServiceOperationResponse().withOperationState(OperationState.IN_PROGRESS);break;
-		case queued: new GetLastServiceOperationResponse().withOperationState(OperationState.IN_PROGRESS);break;
+		case done : status=OperationState.SUCCEEDED;break; 
+		case error: status=OperationState.FAILED;break;
+		case processing: status=OperationState.IN_PROGRESS;break;
+		case queued: status=OperationState.IN_PROGRESS;break;
 		default: logger.error("unknow task status {}");
 		}
-		return new GetLastServiceOperationResponse().withOperationState(OperationState.IN_PROGRESS);
+		return new GetLastServiceOperationResponse().withOperationState(status);
 	}
 
 }
