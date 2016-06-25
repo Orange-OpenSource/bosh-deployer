@@ -58,7 +58,7 @@ director:
   url: https://bosh2
   user: bosh-deployer
   password: xxx
-  proxyHost: 127.0.0.1
+  proxyHost: ""
   proxyPort: 3128
 
 broker:

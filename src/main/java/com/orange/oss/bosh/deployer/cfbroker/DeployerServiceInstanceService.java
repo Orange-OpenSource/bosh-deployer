@@ -74,8 +74,10 @@ public class DeployerServiceInstanceService implements ServiceInstanceService  {
     
     
     @Override
-    public CreateServiceInstanceResponse createServiceInstance(CreateServiceInstanceRequest req)
-             {
+    public CreateServiceInstanceResponse createServiceInstance(CreateServiceInstanceRequest req) {
+             
+    	
+    	logger.info("Starting creating service instance {}",req.getServiceInstanceId());
         String instanceId = req.getServiceInstanceId();
         
         //TODO: asynchronously launch bosh deployment provisionnig
@@ -91,8 +93,9 @@ public class DeployerServiceInstanceService implements ServiceInstanceService  {
         DeploymentSpec spec=this.deploymentSpecFactory.spec();
         
 		//launch create task
+    	logger.info("Launch bosh deployment for service instance {}",req.getServiceInstanceId());        
         ManifestMapping.Manifest manifest=this.manifestComposer.composeBoshManifest(spec);
-		String deploymentName="on-demande-"+serviceInstance.getServiceInstanceId();
+		String deploymentName="on-demand-"+serviceInstance.getServiceInstanceId();
 		String textManifest=this.manifestParser.generate(manifest);
 		int taskId=this.boshClient.asyncDeploy(deploymentName, textManifest);
 		
@@ -122,6 +125,7 @@ public class DeployerServiceInstanceService implements ServiceInstanceService  {
 //        }
 //        
         this.serviceRepository.save(serviceInstance);
+    	logger.info("Job deployment Started for service instance {}",req.getServiceInstanceId());        
         CreateServiceInstanceResponse response=new CreateServiceInstanceResponse().withAsync(true);
         return response;
     }
@@ -129,6 +133,7 @@ public class DeployerServiceInstanceService implements ServiceInstanceService  {
     @Override
     public DeleteServiceInstanceResponse deleteServiceInstance(DeleteServiceInstanceRequest deleteServiceInstanceRequest){
     	
+    	logger.info("Start deleting service instance {}",deleteServiceInstanceRequest.getServiceInstanceId());
     	//Asynchronously delete related bosh deployment implementing the service instance
         Instance serviceInstance = this.serviceRepository.findOne(deleteServiceInstanceRequest.getServiceInstanceId());
         
@@ -139,6 +144,9 @@ public class DeployerServiceInstanceService implements ServiceInstanceService  {
         
         //FIXME launch delete (async)
         //hazelcastAdmin.deleteHazelcastInstance(deleteServiceInstanceRequest.getServiceInstanceId());
+        
+    	logger.info("Done deleting service instance {}",deleteServiceInstanceRequest.getServiceInstanceId());        
+        
         return new DeleteServiceInstanceResponse().withAsync(true);
     }
 
@@ -161,15 +169,12 @@ public class DeployerServiceInstanceService implements ServiceInstanceService  {
 
 	@Override
 	public GetLastServiceOperationResponse getLastOperation(GetLastServiceOperationRequest req) {
+    	logger.info("last operation asked for service instance {}",req.getServiceInstanceId());
 		String serviceInstanceId=req.getServiceInstanceId();
         Instance serviceInstance = this.serviceRepository.findOne(req.getServiceInstanceId());
         if (serviceInstance==null){
         	throw new  ServiceInstanceDoesNotExistException("Service Instance unknow");
         }
-        
-        
-		
-		
 		
 		//this is the polling from cf expecting async provisionning to transition to finished or error state
 		
@@ -182,6 +187,7 @@ public class DeployerServiceInstanceService implements ServiceInstanceService  {
 		//FIXME: if director acces technically KO, return in progress ?
 		
 		//now get task from director
+    	logger.info("Getting bosh task status, task {}, service instance {}",taskId,req.getServiceInstanceId());		
 		Task t=this.boshClient.getTask(taskId);
 		switch (t.state){
 		case done : new GetLastServiceOperationResponse().withOperationState(OperationState.SUCCEEDED);break; 
@@ -190,7 +196,6 @@ public class DeployerServiceInstanceService implements ServiceInstanceService  {
 		case queued: new GetLastServiceOperationResponse().withOperationState(OperationState.IN_PROGRESS);break;
 		default: logger.error("unknow task status {}");
 		}
-		
 		return new GetLastServiceOperationResponse().withOperationState(OperationState.IN_PROGRESS);
 	}
 

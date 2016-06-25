@@ -17,6 +17,8 @@
 
 package com.orange.oss.bosh.deployer.cfbroker;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.servicebroker.model.CreateServiceInstanceBindingRequest;
 import org.springframework.cloud.servicebroker.model.CreateServiceInstanceBindingResponse;
@@ -34,6 +36,8 @@ import com.orange.oss.bosh.deployer.cfbroker.db.ServiceRepository;
 @Service
 public class DeployerServiceInstanceBindingService implements ServiceInstanceBindingService {
 
+	private static Logger logger=LoggerFactory.getLogger(DeployerServiceInstanceBindingService.class.getName());
+	
 	@Autowired
     private ServiceRepository serviceRepository;
 	
@@ -46,6 +50,8 @@ public class DeployerServiceInstanceBindingService implements ServiceInstanceBin
     public CreateServiceInstanceBindingResponse createServiceInstanceBinding(CreateServiceInstanceBindingRequest
                 req)  {
 
+    	logger.info("Start binding service instance {}",req.getServiceInstanceId());    	
+    	
         InstanceBinding instanceBinding = bindingRepository.findOne(req.getServiceInstanceId());
         if (instanceBinding != null) {
             throw new IllegalArgumentException("already exist:"+instanceBinding.toString());
@@ -62,9 +68,11 @@ public class DeployerServiceInstanceBindingService implements ServiceInstanceBin
         
         this.bindingRepository.save(instanceBinding);
         
-        //TODO: 
+        //FIXME: 
         // generate dedicated credentials for binding (optional, otherwhise return service instance global credentials)
         // returns connectivity name
+        
+    	logger.info("Done binding service instance {}",req.getServiceInstanceId());        
         
         return new CreateServiceInstanceBindingResponse();
         
@@ -73,11 +81,16 @@ public class DeployerServiceInstanceBindingService implements ServiceInstanceBin
     @Override
     public void deleteServiceInstanceBinding(DeleteServiceInstanceBindingRequest
            deleteServiceInstanceBindingRequest) {
+    	
+    	logger.info("Start delete binding service instance {}",deleteServiceInstanceBindingRequest.getServiceInstanceId());    	
         String id = deleteServiceInstanceBindingRequest.getBindingId();
 
         InstanceBinding instanceBinding = this.bindingRepository.findOne(id);
         if (instanceBinding != null) {
             this.bindingRepository.delete(instanceBinding);
         }
+        //FIXME: delete credentials if per binding
+        
+    	logger.info("Done delete binding service instance {}",deleteServiceInstanceBindingRequest.getServiceInstanceId());        
     }
 }
