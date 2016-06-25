@@ -23,7 +23,7 @@ import io.swagger.model.UnbindParameters;
  * @author poblin-orange
  *
  */
-@FeignClient(name="services",url="${test.broker.url}",configuration=com.orange.oss.bosh.brokerfeigncfg.BrokerFeignConfiguration.class)
+@FeignClient(name="services",url="http://localhost:${server.port}/v2",configuration=com.orange.oss.bosh.brokerfeigncfg.BrokerFeignConfiguration.class)
 public interface ServiceInstancesFeignClient extends ServiceInstancesApi {
 
 	/**

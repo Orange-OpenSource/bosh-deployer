@@ -12,7 +12,7 @@ import com.orange.oss.bosh.deployer.cfbroker.swagger.CatalogApi;
  * @author poblin-orange
  *
  */
-@FeignClient(name="catalog",url="${test.broker.url}",configuration=com.orange.oss.bosh.brokerfeigncfg.BrokerFeignConfiguration.class)
+@FeignClient(name="catalog",url="http://localhost:${server.port}/v2",configuration=com.orange.oss.bosh.brokerfeigncfg.BrokerFeignConfiguration.class)
 public interface CatalogFeignClient extends CatalogApi {
 
 
