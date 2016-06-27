@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: poblin-orange
+      changes:
+        - createTable:
+            tableName: instance
+            columns:
+              - column:
+                  name: serviceInstanceId
+                  type: varchar(255)
+                  autoIncrement: false
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: deployment
+                  type: varchar(1000)
+                  constraints:
+                    nullable: true
+
+              - column:
+                  name: lasttaskId
+                  type: int
+                  constraints:
+                    nullable: true
+                    
+        - createTable:
+            tableName: instanceBinding
+            columns:
+              - column:
+                  name: serviceInstanceBindingId
+                  type: varchar(255)
+                  autoIncrement: false
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: serviceInstanceId
+                  type: varchar(255)
+                  autoIncrement: false
+                  constraints:
+                    primaryKey: false
+                    nullable: false
+
+                    

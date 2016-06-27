@@ -77,6 +77,13 @@
 			<artifactId>spring-cloud-cloudfoundry-service-broker</artifactId>
 		<version>1.0.0.RELEASE</version></dependency>
 
+		<dependency>
+			<groupId>org.liquibase</groupId>
+			<artifactId>liquibase-core</artifactId>
+		</dependency>
+
+
+
         <dependency>
             <groupId>com.hazelcast</groupId>
             <artifactId>hazelcast</artifactId>
