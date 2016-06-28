@@ -9,6 +9,7 @@ import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fest.assertions.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +25,7 @@ import com.orange.oss.bosh.deployer.ApiMappings.Deployment;
 import com.orange.oss.bosh.deployer.ApiMappings.Release;
 import com.orange.oss.bosh.deployer.ApiMappings.ReleaseVersion;
 
-import junit.framework.Assert;
+
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -67,10 +68,12 @@ public class MockRestAPITest {
                 .withBodyFile("stemcells.json")));
 	
 	List<ApiMappings.Stemcell> stemcells=client.getStemcells();
-	Assert.assertEquals(1,stemcells.size());
-	Assert.assertEquals("bosh-openstack-kvm-ubuntu-trusty-go_agent", stemcells.get(0).name);
-	Assert.assertEquals("ubuntu-trusty", stemcells.get(0).operating_system);
-	Assert.assertEquals("3232.3", stemcells.get(0).version);		
+	Assertions.assertThat(stemcells.size()).isEqualTo(1);
+	Assertions.assertThat(stemcells.get(0).name).isEqualTo("bosh-openstack-kvm-ubuntu-trusty-go_agent");
+	
+	Assertions.assertThat(stemcells.get(0).operating_system).equals("ubuntu-trusty");
+	Assertions.assertThat(stemcells.get(0).version).equals("3232.3");
+
 	}
 
 	@Test
@@ -85,18 +88,18 @@ public class MockRestAPITest {
 		
 		List<Release> releases=client.getReleases();
 		Release release=releases.get(0);
-		Assert.assertEquals("broker-registrar", release.name);
+		Assertions.assertThat(release.name).isEqualTo("broker-registrar");
 
 		ReleaseVersion rv=release.release_versions.get(0);
 		
-		Assert.assertEquals("1", rv.version);
-		Assert.assertEquals("b4336774", rv.commit_hash);		
-		Assert.assertEquals(Boolean.TRUE, rv.currently_deployed);
-		Assert.assertEquals(Boolean.TRUE, rv.uncommitted_changes);
+		Assertions.assertThat(rv.version).isEqualTo("1");
+		Assertions.assertThat(rv.commit_hash).isEqualTo("b4336774");		
+		Assertions.assertThat(rv.currently_deployed).isEqualTo(Boolean.TRUE); 
+		Assertions.assertThat(rv.uncommitted_changes).isEqualTo(Boolean.TRUE);
 		List<String> expectedJobNames=new ArrayList<>();
 		expectedJobNames.add("broker-deregistrar");
 		expectedJobNames.add("broker-registrar");
-		Assert.assertEquals(expectedJobNames, rv.job_names);
+		Assertions.assertThat(rv.job_names).isEqualTo(expectedJobNames);
 
 	}
 

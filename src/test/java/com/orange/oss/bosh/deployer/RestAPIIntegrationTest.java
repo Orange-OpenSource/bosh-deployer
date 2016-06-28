@@ -159,19 +159,8 @@ public class RestAPIIntegrationTest {
 			.forEach(vmf -> logger.info("vm {} {} {}/{} ",vmf.agent_id,vmf.cid,vmf.job,vmf.index));
 
 			//task bosh vms vitals si full. String vmsList=client.getVmsFormat(depl.name, "full");
-			
-			
-			
-			
-			
 			List<Vm> vms=client.getVms(depl.name);
 			vms.stream().forEach(v -> logger.info("vm: {} {}/{} ",v.agent_id,v.job,v.index));
-			
-			
-			
-			
-
-			
 		}
 		
 	}

@@ -22,6 +22,7 @@ import org.springframework.cloud.servicebroker.exception.ServiceBrokerException;
  * Hazelcast service exception
  */
 
+@SuppressWarnings("serial")
 public class DeployerServiceException extends ServiceBrokerException {
 
     public DeployerServiceException(String message) {

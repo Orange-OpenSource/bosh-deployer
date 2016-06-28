@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import com.orange.oss.bosh.deployer.ApiMappings;
 import com.orange.oss.bosh.deployer.BoshClient;
 import com.orange.oss.bosh.deployer.BoshFeignClient;
-import com.orange.oss.bosh.deployer.ApiMappings.Info;
 import com.orange.oss.bosh.deployer.manifest.ManifestMapping.InstanceGroup;
 import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Job;
 import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Manifest;
@@ -56,6 +55,9 @@ public class ManifestComposer {
 	
 	
 	public Manifest composeBoshManifest(DeploymentSpec spec){
+		
+		//FIXME condition manifest composition from deployment spec
+		
 		ApiMappings.Info info=boshFeignClient.getInfo();
 		String uuid=info.uuid;
 		String deploymentName="composed-hazelcast";

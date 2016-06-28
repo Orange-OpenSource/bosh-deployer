@@ -18,17 +18,18 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.orange.oss.bosh.deployer.BoshDeployerApplication;
 
 import io.swagger.model.Binding;
+import io.swagger.model.BindingResponse;
 import io.swagger.model.CatalogServices;
 import io.swagger.model.DashboardUrl;
 import io.swagger.model.Parameter;
 import io.swagger.model.Plan;
 import io.swagger.model.Service;
 import io.swagger.model.Services;
+import io.swagger.model.UnbindParameters;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {BoshDeployerApplication.class})
 @WebIntegrationTest({"server.port=8080", "management.port=0"})
-//@EnableSwagger2
 @ActiveProfiles("integration")
 
 public class BrokerClientIntegrationTest {
@@ -94,8 +95,6 @@ public class BrokerClientIntegrationTest {
 		Assertions.assertThat(state).isEqualTo(LastOperationState.SUCCEEDED.toString());
 		logger.info("Succeeded provisionning service");
 		
-		
-		
 		//bind the service
 		logger.info("service instance bind");		
 		String appGuid=UUID.randomUUID().toString();
@@ -110,11 +109,12 @@ public class BrokerClientIntegrationTest {
 		binding.setPlanId(plan.getId());
 		binding.setServiceId(service.getId());
 		
-//		ResponseEntity<BindingResponse> bindingResponse=services.serviceBind(instanceId, bindingId, binding);
+		ResponseEntity<BindingResponse> bindingResponse=services.serviceBind(instanceId, bindingId, binding);
 		
 		
 		//check and assert resulting credentials
-		
+		String drain=bindingResponse.getBody().getSyslogDrainUrl();
+		bindingResponse.getBody().getCredentials();
 		
 		//check dashboard
 		
@@ -123,9 +123,14 @@ public class BrokerClientIntegrationTest {
 		logger.info("service instance unbind");		
 		
 		//delete the service instance
-		logger.info("delete service instance bind");		
+		logger.info("delete service instance");
+		UnbindParameters deProvisionParamer=new UnbindParameters();
+		deProvisionParamer.setServiceId(service.getId()); //why required to resend ?
+		deProvisionParamer.setPlanId(plan.getId());
 		
+		this.services.deprovisionServiceInstance(instanceId, deProvisionParamer );
 		
+		//poll delete done
 	}
 
 }

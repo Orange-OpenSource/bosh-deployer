@@ -9,7 +9,18 @@ public class Instance {
 	@Id
 	private String serviceInstanceId;
 	
+	private String deployment;
 	
+	
+	public String getDeployment() {
+		return deployment;
+	}
+
+	public void setDeployment(String deployment) {
+		this.deployment = deployment;
+	}
+
+
 	private Integer lastTaskId;
 
 	public Integer getLastTaskId() {

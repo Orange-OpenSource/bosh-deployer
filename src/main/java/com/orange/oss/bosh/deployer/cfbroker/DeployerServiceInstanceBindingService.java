@@ -17,6 +17,9 @@
 
 package com.orange.oss.bosh.deployer.cfbroker;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +31,6 @@ import org.springframework.stereotype.Service;
 
 import com.orange.oss.bosh.deployer.cfbroker.db.BindingRepository;
 import com.orange.oss.bosh.deployer.cfbroker.db.InstanceBinding;
-import com.orange.oss.bosh.deployer.cfbroker.db.ServiceRepository;
 
 /**
  * Service Instance Binding broker API
@@ -38,8 +40,6 @@ public class DeployerServiceInstanceBindingService implements ServiceInstanceBin
 
 	private static Logger logger=LoggerFactory.getLogger(DeployerServiceInstanceBindingService.class.getName());
 	
-	@Autowired
-    private ServiceRepository serviceRepository;
 	
 	@Autowired
     private BindingRepository bindingRepository;
@@ -57,10 +57,14 @@ public class DeployerServiceInstanceBindingService implements ServiceInstanceBin
             throw new IllegalArgumentException("already exist:"+instanceBinding.toString());
         }
 
-//        Map<String, Object> credentials = new HashMap<String, Object>();
-//        credentials.put("host", serviceInstance.getHazelcastIPAddress());
-//        credentials.put("InetAddress", serviceInstance.getHazelcastInetAddress());
-//        credentials.put("Port", serviceInstance.getHazelcastPort());
+        final Map<String, Object> credentials = new HashMap<String, Object>();
+        
+        
+        String ip="1.1.1.1";
+		credentials.put("host", ip);
+        credentials.put("InetAddress", ip);
+        Integer port=2555;
+		credentials.put("Port", port);
 //
         String appGuid = req.getAppGuid();
 
@@ -73,7 +77,7 @@ public class DeployerServiceInstanceBindingService implements ServiceInstanceBin
         // returns connectivity name
         
     	logger.info("Done binding service instance {}",req.getServiceInstanceId());        
-        
+    	CreateServiceInstanceBindingResponse resp=new CreateServiceInstanceBindingResponse();
         return new CreateServiceInstanceBindingResponse();
         
     }

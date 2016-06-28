@@ -33,10 +33,8 @@ import org.springframework.cloud.servicebroker.model.UpdateServiceInstanceReques
 import org.springframework.cloud.servicebroker.model.UpdateServiceInstanceResponse;
 import org.springframework.cloud.servicebroker.service.ServiceInstanceService;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import com.orange.oss.bosh.deployer.ApiMappings.Task;
-import com.orange.oss.bosh.deployer.ApiMappings.TaskStatus;
 import com.orange.oss.bosh.deployer.BoshClient;
 import com.orange.oss.bosh.deployer.cfbroker.db.Instance;
 import com.orange.oss.bosh.deployer.cfbroker.db.ServiceRepository;
@@ -96,11 +94,13 @@ public class DeployerServiceInstanceService implements ServiceInstanceService  {
     	logger.info("Launch bosh deployment for service instance {}",req.getServiceInstanceId());        
         ManifestMapping.Manifest manifest=this.manifestComposer.composeBoshManifest(spec);
 		String deploymentName="on-demand-"+serviceInstance.getServiceInstanceId();
+		manifest.name=deploymentName;
 		String textManifest=this.manifestParser.generate(manifest);
 		int taskId=this.boshClient.asyncDeploy(deploymentName, textManifest);
 		
 		//keep task id for future last operation lookup
 		serviceInstance.setLastTaskId(taskId);
+		serviceInstance.setDeployment(deploymentName);
 
 //        HazelcastInstance hazelcastInstance = hazelcastAdmin.createHazelcastInstance(
 //                createServiceInstanceRequest.getServiceInstanceId());
@@ -140,6 +140,10 @@ public class DeployerServiceInstanceService implements ServiceInstanceService  {
         if (serviceInstance==null){
         	throw new  ServiceInstanceDoesNotExistException("Service Instance unknow");
         }
+        
+        //FIXME: Assert deployment name not null
+        this.boshClient.deleteForceDeployment(serviceInstance.getDeployment());
+        
         this.serviceRepository.delete(serviceInstance);
         
         //FIXME launch delete (async)
@@ -147,7 +151,7 @@ public class DeployerServiceInstanceService implements ServiceInstanceService  {
         
     	logger.info("Done deleting service instance {}",deleteServiceInstanceRequest.getServiceInstanceId());        
         
-        return new DeleteServiceInstanceResponse().withAsync(true);
+        return new DeleteServiceInstanceResponse().withAsync(false);
     }
 
     @Override
