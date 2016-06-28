@@ -17,6 +17,8 @@ spring:
   jpa:
     database: H2
     show-sql: true
+    hibernate:
+      ddl-auto: none
 
 security:
   ignored: /favicon.ico, /
@@ -64,6 +66,10 @@ director:
 broker:
   user: broker
   password: xx
+
+admin:
+  user: admin
+  password: yy
 
    
    
