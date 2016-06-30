@@ -44,6 +44,18 @@ public class BrokerClientIntegrationTest {
 	ServiceInstancesFeignClient services;
 	
 	
+	@Test
+	public void testUnbing() {
+		//delete the service instance
+		logger.info("delete service instance");
+		UnbindParameters deProvisionParamer=new UnbindParameters();
+		deProvisionParamer.setServiceId("xxx"); //why required to resend ?
+		deProvisionParamer.setPlanId("yyy");
+		
+		this.services.deprovisionServiceInstance("1210030", "xx","yy",false); //why required to resend ?
+		
+	}
+	
 	
 	@Test
 	public void testBrokerLifecycle() throws InterruptedException{
@@ -124,11 +136,8 @@ public class BrokerClientIntegrationTest {
 		
 		//delete the service instance
 		logger.info("delete service instance");
-		UnbindParameters deProvisionParamer=new UnbindParameters();
-		deProvisionParamer.setServiceId(service.getId()); //why required to resend ?
-		deProvisionParamer.setPlanId(plan.getId());
-		
-		this.services.deprovisionServiceInstance(instanceId, deProvisionParamer );
+	
+		this.services.deprovisionServiceInstance(instanceId, service.getId(),plan.getId(),false); //why required to resend ?
 		
 		//poll delete done
 	}

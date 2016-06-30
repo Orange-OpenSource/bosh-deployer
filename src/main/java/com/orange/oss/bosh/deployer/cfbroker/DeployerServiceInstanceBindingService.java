@@ -23,6 +23,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.servicebroker.model.CreateServiceInstanceAppBindingResponse;
 import org.springframework.cloud.servicebroker.model.CreateServiceInstanceBindingRequest;
 import org.springframework.cloud.servicebroker.model.CreateServiceInstanceBindingResponse;
 import org.springframework.cloud.servicebroker.model.DeleteServiceInstanceBindingRequest;
@@ -60,6 +61,8 @@ public class DeployerServiceInstanceBindingService implements ServiceInstanceBin
         final Map<String, Object> credentials = new HashMap<String, Object>();
         
         
+        
+        
         String ip="1.1.1.1";
 		credentials.put("host", ip);
         credentials.put("InetAddress", ip);
@@ -77,8 +80,7 @@ public class DeployerServiceInstanceBindingService implements ServiceInstanceBin
         // returns connectivity name
         
     	logger.info("Done binding service instance {}",req.getServiceInstanceId());        
-    	CreateServiceInstanceBindingResponse resp=new CreateServiceInstanceBindingResponse();
-        return new CreateServiceInstanceBindingResponse();
+    	return new CreateServiceInstanceAppBindingResponse().withCredentials(credentials);
         
     }
 

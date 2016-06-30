@@ -7,7 +7,7 @@ databaseChangeLog:
             tableName: instance
             columns:
               - column:
-                  name: serviceInstanceId
+                  name: service_instance_id
                   type: varchar(255)
                   autoIncrement: false
                   constraints:
@@ -20,23 +20,23 @@ databaseChangeLog:
                     nullable: true
 
               - column:
-                  name: lasttaskId
+                  name: last_task_id
                   type: int
                   constraints:
                     nullable: true
                     
         - createTable:
-            tableName: instanceBinding
+            tableName: instance_binding
             columns:
               - column:
-                  name: serviceInstanceBindingId
+                  name: service_instance_binding_id
                   type: varchar(255)
                   autoIncrement: false
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: serviceInstanceId
+                  name: service_instance_id
                   type: varchar(255)
                   autoIncrement: false
                   constraints:

@@ -1,11 +1,39 @@
-   
+
+spring:
+  sleuth:
+    sampler:
+      percentage: 1.0
+  zipkin:
+    enabled: true
+    #base-url: http://zipkin-server.cw-lz-api.redacted-domain.org 
+    base-url: https://zipkin-server.redacted-domain
 director:
-  #url: https://bosh2
   url: https://bosh2.redacted-domain.org/
-  
-  
   user: bosh-deployer
-  password: ClawzEncedQuogNo
+  password: PesCinyocyegAshpOrwyntAfgerCevNiwigtuebIthDypItyul
   proxyHost: 127.0.0.1
   proxyPort: 3128
    
+broker:
+  user: xx
+  password: yy
+admin:
+  user: xx
+  password: yy
+  
+  
+test:
+  broker:
+    url: http://localhost:8080/v2
+    proxyHost: ""
+    proxyPort: 3128
+   
+feign:
+  hystrix:
+    enabled: false   
+hystrix:
+   command.catalog.execution.isolation.thread.timeoutInMilliseconds: 30000
+   command.services.execution.isolation.thread.timeoutInMilliseconds: 30000
+   
+  
+  

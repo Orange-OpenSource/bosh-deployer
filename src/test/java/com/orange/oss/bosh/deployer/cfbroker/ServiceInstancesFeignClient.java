@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.orange.oss.bosh.deployer.cfbroker.swagger.CatalogApi;
 import com.orange.oss.bosh.deployer.cfbroker.swagger.ServiceInstancesApi;
@@ -43,4 +44,16 @@ public interface ServiceInstancesFeignClient extends ServiceInstancesApi {
         );
 
 
+    
+    @RequestMapping(value = "/service_instances/{instance_id}",
+            produces = { "application/json" }, 
+            method = RequestMethod.DELETE)
+        ResponseEntity<Empty> deprovisionServiceInstance(@ApiParam(value = "The instance_id of a service instance is provided by the Cloud Controller. This ID will be used for future requests (bind and deprovision), so the broker must use it to correlate the resource it creates.",required=true ) @PathVariable("instance_id") String instanceId,
+            @ApiParam(value = "Parameters to identify the service_id" ,required=true ) @RequestParam("service_id") String service_id,
+            @ApiParam(value = "Parameters to identify the plan_id" ,required=true ) @RequestParam("plan_id") String plan_id,
+            @ApiParam(value = "Parameters to identify if accept incomplete" ,required=false ) @RequestParam("accepts_incomplete") Boolean accepts_incomplete
+        		);
+    
+    
+    
 }
