@@ -2,17 +2,21 @@ package com.orange.oss.bosh.deployer.manifest;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.UUID;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.orange.oss.bosh.deployer.ApiMappings;
-import com.orange.oss.bosh.deployer.BoshClient;
-import com.orange.oss.bosh.deployer.BoshFeignClient;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings;
+import com.orange.oss.bosh.deployer.boshapi.BoshClient;
+import com.orange.oss.bosh.deployer.boshapi.BoshFeignClient;
 import com.orange.oss.bosh.deployer.manifest.ManifestMapping.InstanceGroup;
 import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Job;
 import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Manifest;
@@ -60,7 +64,10 @@ public class ManifestComposer {
 		
 		ApiMappings.Info info=boshFeignClient.getInfo();
 		String uuid=info.uuid;
-		String deploymentName="composed-hazelcast";
+		String deploymentName=spec.deploymentNamePrefix+"-"+UUID.randomUUID();
+		
+		
+		
 		
 		Manifest manifest=new Manifest();
 		manifest.director_uuid=uuid;
@@ -83,13 +90,6 @@ public class ManifestComposer {
 		manifest.stemcells.add(stemcell);
 		
 		
-		//releases
-		manifest.releases=new ArrayList<Release>();
-		ManifestMapping.Release release=new Release();
-		release.name="hazelcast";
-		release.version="latest";
-		manifest.releases.add(release);
-		
 		
 		//network and az for instance groups
 		List<Network> hzNetWorks=new ArrayList<Network>();
@@ -104,11 +104,15 @@ public class ManifestComposer {
 		//instances group
 		manifest.instance_groups=new ArrayList<>();
 		
+		Set<String> uniqueReleases=new HashSet<String>();
+		
+		
+		for (DeploymentSpec.InstanceGroup dsig:spec.instanceGroups)
 		{
 		InstanceGroup instanceIG=new InstanceGroup();
-		instanceIG.instances=2;
+		instanceIG.instances=dsig.instances;
 		instanceIG.azs=azs;
-		instanceIG.name="hazelcast-instances";
+		instanceIG.name=dsig.jobName;
 		
 		instanceIG.networks=hzNetWorks;
 		instanceIG.stemcell=stemcellAlias;
@@ -116,40 +120,41 @@ public class ManifestComposer {
 		
 		
 		Job instanceJob=new Job();
-		instanceJob.name="hazelcast_node";
-		instanceJob.release="hazelcast";
+		instanceJob.name=dsig.jobName;
+		instanceJob.release=dsig.releaseName;
 		instanceIG.jobs=new ArrayList<Job>();
 		instanceIG.jobs.add(instanceJob);
 		
+		uniqueReleases.add(dsig.releaseName);
+		
 		
 		Map properties=new HashMap<String,String>();
-		properties.put("hazelcast.jvm.memoryMo", "3000");
-		properties.put("hazelcast.group.name", "hz-group");
-		properties.put("hazelcast.group.password", "eentepAxHo");
+		properties.putAll(dsig.properties);
+		
+		//generate random props
+		for (String randomProp:dsig.randomCredentials){
+			
+			String generatedPassword=RandomStringUtils.randomAlphanumeric(20).toUpperCase();
+			properties.put(randomProp, generatedPassword);
+		}
 		
 		//generate Json/Yaml map structure from flat properties
 		instanceJob.properties=PropertyMapper.map(properties);
 		manifest.instance_groups.add(instanceIG);
 		}
 		
-		{
-		InstanceGroup managerIG=new InstanceGroup();
-		managerIG.instances=1;
-		managerIG.azs=azs;
-		managerIG.name="manager";
 		
-		managerIG.networks=hzNetWorks;
-		managerIG.stemcell=stemcellAlias;
-		managerIG.vm_type=vmType;
-
-		Job managerJob=new Job();
-		managerJob.name="hazelcast_mancenter";
-		managerJob.release="hazelcast";
-		managerIG.jobs=new ArrayList<Job>();
-		managerIG.jobs.add(managerJob);
+		//releases
+		//add distinct all release
 		
-		manifest.instance_groups.add(managerIG);
+		for (String uniqueReleaseName: uniqueReleases){
+			Release r=new Release();
+			r.name=uniqueReleaseName;
+			r.version="latest";
+			manifest.releases.add(r);
 		}
+		
+		
 		
 		logger.info("composed manifest:\n{}",manifestParser.generate(manifest));
 		return manifest;

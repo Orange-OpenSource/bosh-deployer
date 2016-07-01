@@ -1,4 +1,4 @@
-package com.orange.oss.bosh.deployer;
+package com.orange.oss.bosh.deployer.boshapi;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,11 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.orange.oss.bosh.deployer.ApiMappings.SingleDeployment;
-import com.orange.oss.bosh.deployer.ApiMappings.Task;
-import com.orange.oss.bosh.deployer.ApiMappings.TaskOutput;
-import com.orange.oss.bosh.deployer.ApiMappings.TaskStatus;
-import com.orange.oss.bosh.deployer.ApiMappings.VmFull;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.SingleDeployment;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.Task;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.TaskOutput;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.TaskStatus;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.VmFull;
 import com.orange.oss.bosh.deployer.manifest.ManifestMapping;
 import com.orange.oss.bosh.deployer.manifest.ManifestParser;
 import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Network;

@@ -1,5 +1,6 @@
 package com.orange.oss.bosh.deployer.manifest;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,10 +18,10 @@ public class ManifestMapping {
 		
 		public String director_uuid;
 		public String name;
-		public List<Release> releases;
+		public List<Release> releases=new ArrayList<Release>();
 		public Update update;
-		public List<Stemcell> stemcells;
-		public List<InstanceGroup> instance_groups;
+		public List<Stemcell> stemcells=new ArrayList<Stemcell>();
+		public List<InstanceGroup> instance_groups=new ArrayList<InstanceGroup>();
 		
 		//see: http://yuluer.com/page/ehidecb-how-can-i-include-raw-json-in-an-object-using-jackson.shtml
 //		public Map<String,Object> properties=new HashMap<String,Object>(); // yaml structure

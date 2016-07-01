@@ -1,4 +1,4 @@
-package com.orange.oss.bosh.deployer;
+package com.orange.oss.bosh.deployer.boshapi;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

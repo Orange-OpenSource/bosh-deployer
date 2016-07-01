@@ -12,8 +12,8 @@ import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.orange.oss.bosh.deployer.BoshClient;
 import com.orange.oss.bosh.deployer.BoshDeployerApplication;
+import com.orange.oss.bosh.deployer.boshapi.BoshClient;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {BoshDeployerApplication.class})

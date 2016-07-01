@@ -1,4 +1,4 @@
-package com.orange.oss.bosh.deployer;
+package com.orange.oss.bosh.deployer.boshapi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -159,6 +159,9 @@ public class ApiMappings {
 		public List<String> dns;// [Array of strings]: List of DNS records.
 		public Vitals vitals;// [Hash]: VM vitals.
 		public List<VitalsProcess> processes;// [Array of hashes]: List of processes running as part of the job.
+		
+		//add on  257
+		public boolean ignore;
 		
 		
 		public String state; //undocumented. started

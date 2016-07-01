@@ -15,10 +15,10 @@ import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.orange.oss.bosh.deployer.ApiMappings;
-import com.orange.oss.bosh.deployer.BoshClient;
 import com.orange.oss.bosh.deployer.BoshDeployerApplication;
-import com.orange.oss.bosh.deployer.BoshFeignClient;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings;
+import com.orange.oss.bosh.deployer.boshapi.BoshClient;
+import com.orange.oss.bosh.deployer.boshapi.BoshFeignClient;
 import com.orange.oss.bosh.deployer.manifest.ManifestMapping.InstanceGroup;
 import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Job;
 import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Manifest;
@@ -44,7 +44,37 @@ public class BoshClientDeployComposedManifestTest {
 	@Autowired
 	ManifestParser manifestParser;
 	
+	
+	@Autowired
+	DeploymentSpecFactory specFactory;
+	
+	
+	@Autowired
+	ManifestComposer manifestComposer;
+	
+	
+	
 	private static Logger logger=LoggerFactory.getLogger(BoshClientDeployComposedManifestTest.class.getName());
+	
+	@Test
+	public void testDeployGeneratedComposedManifest() {
+	
+		DeploymentSpec spec=this.specFactory.spec();
+		spec.deploymentNamePrefix="generated-hazelcast";
+		Manifest m=this.manifestComposer.composeBoshManifest(spec);
+		
+		logger.info("composed manifest:\n{}",manifestParser.generate(m));
+		
+		//deploy
+		this.client.deploy(m);
+		logger.info("successfully deployed!");
+		
+		String deploymentName="generated-composed-hazelcast";
+		//delete
+		this.client.deleteForceDeployment(deploymentName);
+		logger.info("successfully deleted !");
+	}
+	
 	@Test
 	public void testDeployComposedManifest() {
 		ApiMappings.Info info=feignClient.getInfo();

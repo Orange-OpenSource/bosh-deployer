@@ -1,5 +1,7 @@
 package com.orange.oss.bosh.deployer.manifest;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +32,8 @@ public class DeploymentSpec {
 		public boolean exposeAsDashBoard=false;
 		
 		//properties, key is flat dot separated key (ww.xx.yy), bosh job sec format and value is String
-		public Map<String, String> properties;
-		public List<String> randomCredentials;
+		public Map<String, String> properties=new HashMap<String,String>();
+		public List<String> randomCredentials=new ArrayList<String>();
 		
 	}
 	

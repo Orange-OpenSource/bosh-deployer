@@ -34,8 +34,8 @@ import org.springframework.cloud.servicebroker.model.UpdateServiceInstanceRespon
 import org.springframework.cloud.servicebroker.service.ServiceInstanceService;
 import org.springframework.stereotype.Component;
 
-import com.orange.oss.bosh.deployer.ApiMappings.Task;
-import com.orange.oss.bosh.deployer.BoshClient;
+import com.orange.oss.bosh.deployer.boshapi.BoshClient;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.Task;
 import com.orange.oss.bosh.deployer.cfbroker.db.Instance;
 import com.orange.oss.bosh.deployer.cfbroker.db.ServiceRepository;
 import com.orange.oss.bosh.deployer.manifest.DeploymentSpec;

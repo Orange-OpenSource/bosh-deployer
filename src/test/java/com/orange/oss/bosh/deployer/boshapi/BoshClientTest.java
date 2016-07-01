@@ -1,4 +1,4 @@
-package com.orange.oss.bosh.deployer;
+package com.orange.oss.bosh.deployer.boshapi;
 
 
 import static org.fest.assertions.Assertions.assertThat;
@@ -17,7 +17,9 @@ import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.orange.oss.bosh.deployer.ApiMappings.VmFull;
+import com.orange.oss.bosh.deployer.BoshDeployerApplication;
+import com.orange.oss.bosh.deployer.boshapi.BoshClient;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.VmFull;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)

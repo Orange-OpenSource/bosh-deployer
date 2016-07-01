@@ -7,7 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 
-import com.orange.oss.bosh.deployer.ApiMappings;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings;
 import com.orange.oss.bosh.deployer.manifest.ManifestMapping;
 
 @Configuration

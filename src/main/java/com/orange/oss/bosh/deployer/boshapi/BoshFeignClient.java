@@ -1,4 +1,4 @@
-package com.orange.oss.bosh.deployer;
+package com.orange.oss.bosh.deployer.boshapi;
 
 import java.util.List;
 
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.orange.oss.bosh.deployer.ApiMappings.Deployment;
-import com.orange.oss.bosh.deployer.ApiMappings.Release;
-import com.orange.oss.bosh.deployer.ApiMappings.Vm;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.Deployment;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.Release;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.Vm;
 
 
 /**

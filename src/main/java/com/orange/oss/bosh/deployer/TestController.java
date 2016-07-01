@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings;
+import com.orange.oss.bosh.deployer.boshapi.BoshClient;
+import com.orange.oss.bosh.deployer.boshapi.BoshFeignClient;
+
 @RestController
 @RequestMapping("/bosh")
 

@@ -1,4 +1,4 @@
-package com.orange.oss.bosh.deployer;
+package com.orange.oss.bosh.deployer.boshapi;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
@@ -21,9 +21,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import com.orange.oss.bosh.deployer.ApiMappings.Deployment;
-import com.orange.oss.bosh.deployer.ApiMappings.Release;
-import com.orange.oss.bosh.deployer.ApiMappings.ReleaseVersion;
+import com.orange.oss.bosh.deployer.BoshDeployerApplication;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings;
+import com.orange.oss.bosh.deployer.boshapi.BoshFeignClient;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.Deployment;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.Release;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.ReleaseVersion;
 
 
 

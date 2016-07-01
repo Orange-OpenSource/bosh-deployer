@@ -1,4 +1,4 @@
-package com.orange.oss.bosh.deployer;
+package com.orange.oss.bosh.deployer.boshapi;
 
 import static org.fest.assertions.Assertions.assertThat;
 
@@ -16,11 +16,14 @@ import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.orange.oss.bosh.deployer.ApiMappings.Deployment;
-import com.orange.oss.bosh.deployer.ApiMappings.SingleDeployment;
-import com.orange.oss.bosh.deployer.ApiMappings.Task;
-import com.orange.oss.bosh.deployer.ApiMappings.TaskStatus;
-import com.orange.oss.bosh.deployer.ApiMappings.Vm;
+import com.orange.oss.bosh.deployer.BoshDeployerApplication;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings;
+import com.orange.oss.bosh.deployer.boshapi.BoshFeignClient;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.Deployment;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.SingleDeployment;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.Task;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.TaskStatus;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.Vm;
 import com.orange.oss.bosh.deployer.manifest.ManifestMapping;
 import com.orange.oss.bosh.deployer.manifest.ManifestParser;
 import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Network;

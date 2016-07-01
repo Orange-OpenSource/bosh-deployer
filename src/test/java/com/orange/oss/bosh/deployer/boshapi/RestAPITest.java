@@ -1,4 +1,4 @@
-package com.orange.oss.bosh.deployer;
+package com.orange.oss.bosh.deployer.boshapi;
 
 import java.util.List;
 
@@ -13,8 +13,11 @@ import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.orange.oss.bosh.deployer.ApiMappings.Deployment;
-import com.orange.oss.bosh.deployer.ApiMappings.Task;
+import com.orange.oss.bosh.deployer.BoshDeployerApplication;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings;
+import com.orange.oss.bosh.deployer.boshapi.BoshFeignClient;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.Deployment;
+import com.orange.oss.bosh.deployer.boshapi.ApiMappings.Task;
 
 import junit.framework.Assert;
 
