@@ -2,7 +2,9 @@ package com.orange.oss.bosh.deployer.boshapi;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -247,6 +249,29 @@ public class BoshClient {
 	 */
 	public Task getTask(int taskId) {
 		return this.client.getTask(taskId);
+	}
+
+	
+	/**
+	 * for a given depl.
+	 * retrieve the vms ip for service access
+	 * @return
+	 */
+	public Map<String, Object> retrieveServiceVms(String deploymentName,String jobName) {
+		
+		Map<String, Object> result=new HashMap<String,Object>();
+		List<String> locators=new ArrayList<String>();
+		
+		List<VmFull> vms=this.detailsVMs(deploymentName);
+		for (VmFull vm: vms){
+			if (vm.job_name.equals(jobName)){
+				logger.info("found a matching vm {}/{}",vm.job_name,vm.index);
+				locators.add( vm.ips.get(0)); //first ip
+			}
+		}
+		
+		result.put("locators", locators);
+		return result;
 	}
 	
 	

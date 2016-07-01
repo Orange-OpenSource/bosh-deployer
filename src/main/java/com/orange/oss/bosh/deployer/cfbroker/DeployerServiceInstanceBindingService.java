@@ -17,7 +17,6 @@
 
 package com.orange.oss.bosh.deployer.cfbroker;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -30,8 +29,11 @@ import org.springframework.cloud.servicebroker.model.DeleteServiceInstanceBindin
 import org.springframework.cloud.servicebroker.service.ServiceInstanceBindingService;
 import org.springframework.stereotype.Service;
 
+import com.orange.oss.bosh.deployer.boshapi.BoshClient;
 import com.orange.oss.bosh.deployer.cfbroker.db.BindingRepository;
+import com.orange.oss.bosh.deployer.cfbroker.db.Instance;
 import com.orange.oss.bosh.deployer.cfbroker.db.InstanceBinding;
+import com.orange.oss.bosh.deployer.cfbroker.db.ServiceRepository;
 
 /**
  * Service Instance Binding broker API
@@ -43,8 +45,14 @@ public class DeployerServiceInstanceBindingService implements ServiceInstanceBin
 	
 	
 	@Autowired
+    private ServiceRepository serviceRepository;
+	
+	
+	@Autowired
     private BindingRepository bindingRepository;
 	
+    @Autowired
+    BoshClient boshClient;
 
 
     @Override
@@ -57,19 +65,15 @@ public class DeployerServiceInstanceBindingService implements ServiceInstanceBin
         if (instanceBinding != null) {
             throw new IllegalArgumentException("already exist:"+instanceBinding.toString());
         }
-
-        final Map<String, Object> credentials = new HashMap<String, Object>();
         
+        Instance instance=this.serviceRepository.findOne(instanceBinding.getServiceInstanceId());
+        if (instance != null) {
+            throw new IllegalArgumentException("Fatal. service instance does not exist for binding :"+instanceBinding.toString());
+        }
         
-        
-        
-        String ip="1.1.1.1";
-		credentials.put("host", ip);
-        credentials.put("InetAddress", ip);
-        Integer port=2555;
-		credentials.put("Port", port);
-//
-        String appGuid = req.getAppGuid();
+        //FIXME: retrieve job name from deploymentSpec
+        String jobName="hazelcast_node";
+		final Map<String, Object> credentials=this.boshClient.retrieveServiceVms(instance.getDeployment(),jobName);
 
         instanceBinding = new InstanceBinding(req.getBindingId(),req.getServiceInstanceId());
         

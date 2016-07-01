@@ -73,13 +73,8 @@ public class DeployerServiceInstanceService implements ServiceInstanceService  {
     
     @Override
     public CreateServiceInstanceResponse createServiceInstance(CreateServiceInstanceRequest req) {
-             
-    	
     	logger.info("Starting creating service instance {}",req.getServiceInstanceId());
         String instanceId = req.getServiceInstanceId();
-        
-        //TODO: asynchronously launch bosh deployment provisionnig
-        
 
         Instance serviceInstance = this.serviceRepository.findOne(instanceId);
         if (serviceInstance != null) {
@@ -93,39 +88,28 @@ public class DeployerServiceInstanceService implements ServiceInstanceService  {
 		//launch create task
     	logger.info("Launch bosh deployment for service instance {}",req.getServiceInstanceId());        
         ManifestMapping.Manifest manifest=this.manifestComposer.composeBoshManifest(spec);
+        
+        
+        //FIX ME: do this in composer
 		String deploymentName="on-demand-"+serviceInstance.getServiceInstanceId();
 		manifest.name=deploymentName;
+		
+
 		String textManifest=this.manifestParser.generate(manifest);
+		
+		serviceInstance.setDeployment(deploymentName);
+		serviceInstance.setDeploymentSpec(spec.toString());
+		serviceInstance.setDeploymentManifest(textManifest);
+		this.serviceRepository.save(serviceInstance);
+		
+		logger.info("launching bosh deployment for service instance {}",serviceInstance.getServiceInstanceId());
 		int taskId=this.boshClient.asyncDeploy(deploymentName, textManifest);
 		
 		//keep task id for future last operation lookup
 		serviceInstance.setLastTaskId(taskId);
-		serviceInstance.setDeployment(deploymentName);
-
-//        HazelcastInstance hazelcastInstance = hazelcastAdmin.createHazelcastInstance(
-//                createServiceInstanceRequest.getServiceInstanceId());
-//        
-//        if (hazelcastInstance == null) {
-//            throw new DeployerServiceException("Failed to create new Hazelcast member hazelcastInstance: "
-//                    + createServiceInstanceRequest.getServiceInstanceId());
-//        }
-
-//        
-//        String hazelcastHost = hazelcastInstance.getCluster().getLocalMember().getAddress().getHost();
-//        ((DeployerServiceInstance) serviceInstance).setHazelcastIPAddress(hazelcastHost);
-//
-//        int hazelcastPort = hazelcastInstance.getCluster().getLocalMember().getAddress().getPort();
-//        ((DeployerServiceInstance) serviceInstance).setHazelcastPort(hazelcastPort);
-//
-//        try {
-//            InetAddress hazelcastInetAddress = hazelcastInstance.getCluster().getLocalMember().getAddress().getInetAddress();
-//            ((DeployerServiceInstance) serviceInstance).setHazelcastInetAddress(hazelcastInetAddress);
-//        } catch (UnknownHostException e) {
-//            e.printStackTrace();
-//        }
-//        
+        
         this.serviceRepository.save(serviceInstance);
-    	logger.info("Job deployment Started for service instance {}",req.getServiceInstanceId());        
+    	logger.info("Job deployment Started asynchronously for service instance {}",req.getServiceInstanceId());        
         CreateServiceInstanceResponse response=new CreateServiceInstanceResponse().withAsync(true);
         return response;
     }

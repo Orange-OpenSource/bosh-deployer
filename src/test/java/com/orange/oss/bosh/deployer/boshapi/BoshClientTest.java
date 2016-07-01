@@ -4,6 +4,7 @@ package com.orange.oss.bosh.deployer.boshapi;
 import static org.fest.assertions.Assertions.assertThat;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import org.fest.assertions.Assertions;
@@ -73,6 +74,17 @@ public class BoshClientTest {
 		
 	}
 
+	
+	@Test
+	public void testRetrieveServiceVms(){
+		String deploymentName="hazelcast"; //fix get deployment from director
+		String jobName="hazelcast_node";
+		Map<String,Object> credentials=this.client.retrieveServiceVms(deploymentName,jobName);
+		
+		
+	}
+	
+	
 	@Test
 	public void testCloneAndDeploy(){
 		String newDeploymentName="clone-hazelcast-"+UUID.randomUUID();

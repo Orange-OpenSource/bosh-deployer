@@ -44,22 +44,10 @@ public class BrokerClientIntegrationTest {
 	ServiceInstancesFeignClient services;
 	
 	
-	@Test
-	public void testUnbing() {
-		//delete the service instance
-		logger.info("delete service instance");
-		UnbindParameters deProvisionParamer=new UnbindParameters();
-		deProvisionParamer.setServiceId("xxx"); //why required to resend ?
-		deProvisionParamer.setPlanId("yyy");
-		
-		this.services.deprovisionServiceInstance("1210030", "xx","yy",false); //why required to resend ?
-		
-	}
 	
 	
 	@Test
 	public void testBrokerLifecycle() throws InterruptedException{
-		
 		
 		logger.info("catalog");
 		ResponseEntity<CatalogServices> cat2=catalog.catalog();

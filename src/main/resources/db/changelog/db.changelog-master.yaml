@@ -18,6 +18,21 @@ databaseChangeLog:
                   type: varchar(1000)
                   constraints:
                     nullable: true
+                    
+
+
+              - column:
+                  name: deployment_spec
+                  type: varchar(10000)
+                  constraints:
+                    nullable: true
+                    
+              - column:
+                  name: deployment_manifest
+                  type: varchar(10000)
+                  constraints:
+                    nullable: true
+                    
 
               - column:
                   name: last_task_id

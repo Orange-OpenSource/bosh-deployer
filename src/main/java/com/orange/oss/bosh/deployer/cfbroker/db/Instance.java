@@ -11,7 +11,30 @@ public class Instance {
 	
 	private String deployment;
 	
+	//generic deployment Spec
+	private String deploymentSpec;
 	
+	//generated bosh deployment manifest 
+	private String deploymentManifest;
+	
+	
+	
+	public String getDeploymentSpec() {
+		return deploymentSpec;
+	}
+
+	public void setDeploymentSpec(String deploymentSpec) {
+		this.deploymentSpec = deploymentSpec;
+	}
+
+	public String getDeploymentManifest() {
+		return deploymentManifest;
+	}
+
+	public void setDeploymentManifest(String deploymentManifest) {
+		this.deploymentManifest = deploymentManifest;
+	}
+
 	public String getDeployment() {
 		return deployment;
 	}
