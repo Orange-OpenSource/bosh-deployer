@@ -34,6 +34,8 @@ import com.orange.oss.bosh.deployer.cfbroker.db.BindingRepository;
 import com.orange.oss.bosh.deployer.cfbroker.db.Instance;
 import com.orange.oss.bosh.deployer.cfbroker.db.InstanceBinding;
 import com.orange.oss.bosh.deployer.cfbroker.db.ServiceRepository;
+import com.orange.oss.bosh.deployer.manifest.ManifestMapping.Manifest;
+import com.orange.oss.bosh.deployer.manifest.ManifestParser;
 
 /**
  * Service Instance Binding broker API
@@ -46,7 +48,10 @@ public class DeployerServiceInstanceBindingService implements ServiceInstanceBin
 	
 	@Autowired
     private ServiceRepository serviceRepository;
-	
+
+	@Autowired
+	private ManifestParser manifestParser;
+
 	
 	@Autowired
     private BindingRepository bindingRepository;
@@ -61,19 +66,23 @@ public class DeployerServiceInstanceBindingService implements ServiceInstanceBin
 
     	logger.info("Start binding service instance {}",req.getServiceInstanceId());    	
     	
-        InstanceBinding instanceBinding = bindingRepository.findOne(req.getServiceInstanceId());
+        InstanceBinding instanceBinding = bindingRepository.findOne(req.getBindingId());
         if (instanceBinding != null) {
             throw new IllegalArgumentException("already exist:"+instanceBinding.toString());
+            //error ?
         }
         
-        Instance instance=this.serviceRepository.findOne(instanceBinding.getServiceInstanceId());
-        if (instance != null) {
+        
+        Instance instance=this.serviceRepository.findOne(req.getServiceInstanceId());
+        if (instance == null) {
             throw new IllegalArgumentException("Fatal. service instance does not exist for binding :"+instanceBinding.toString());
         }
         
-        //FIXME: retrieve job name from deploymentSpec
+        //FIXME: retrieve job name from deploymentSpec, find a way to identify precise credential
         String jobName="hazelcast_node";
 		final Map<String, Object> credentials=this.boshClient.retrieveServiceVms(instance.getDeployment(),jobName);
+		credentials.put("user", "hz-group");
+		
 
         instanceBinding = new InstanceBinding(req.getBindingId(),req.getServiceInstanceId());
         

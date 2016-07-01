@@ -17,7 +17,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.orange.oss.bosh.deployer.BoshDeployerApplication;
 
-import io.swagger.model.Binding;
 import io.swagger.model.BindingResponse;
 import io.swagger.model.CatalogServices;
 import io.swagger.model.DashboardUrl;
@@ -100,7 +99,7 @@ public class BrokerClientIntegrationTest {
 		String appGuid=UUID.randomUUID().toString();
 		
 		String bindingId=UUID.randomUUID().toString();
-		Binding binding=new Binding();
+		Binding28 binding=new Binding28();
 		binding.setAppGuid(appGuid);
 		Parameter parameters=new Parameter();
 //		parameters.setName("");
@@ -108,19 +107,30 @@ public class BrokerClientIntegrationTest {
 		binding.setParameters(parameters);
 		binding.setPlanId(plan.getId());
 		binding.setServiceId(service.getId());
+		BindResource bindResource=new BindResource();
+		bindResource.setAppGuid(appGuid);
+		binding.setBindResource(bindResource);
 		
 		ResponseEntity<BindingResponse> bindingResponse=services.serviceBind(instanceId, bindingId, binding);
 		
 		
 		//check and assert resulting credentials
 		String drain=bindingResponse.getBody().getSyslogDrainUrl();
-		bindingResponse.getBody().getCredentials();
+		
+		Object credentials=bindingResponse.getBody().getCredentials();
 		
 		//check dashboard
 		
 		
 		//unbind the services
 		logger.info("service instance unbind");		
+		
+		UnbindParameters unbindParameters=new UnbindParameters();
+		unbindParameters.setPlanId(plan.getId());
+		unbindParameters.setServiceId(service.getId());
+		
+		services.serviceUnbind(instanceId, bindingId, unbindParameters);
+		
 		
 		//delete the service instance
 		logger.info("delete service instance");
