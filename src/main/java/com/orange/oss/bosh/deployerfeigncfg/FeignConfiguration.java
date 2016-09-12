@@ -1,6 +1,5 @@
 package com.orange.oss.bosh.deployerfeigncfg;
 
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,12 +16,6 @@ import feign.slf4j.Slf4jLogger;
 
 @Configuration
 public class FeignConfiguration {
-
-	private static org.slf4j.Logger logger=LoggerFactory.getLogger(FeignConfiguration.class.getName());
-	
-	
-	
-	
 	
 	@Value("${director.proxyHost}")
 	private String proxyHost;

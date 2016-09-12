@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
-import org.yaml.snakeyaml.Yaml;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,10 +29,6 @@ public class ManifestParser {
 	 */
 	public ManifestMapping.Manifest parser(String yamlManifest){
 		
-		Yaml yaml = new Yaml();
-		Object map=yaml.load(yamlManifest);
-		
-		
 		ObjectMapper mapper=new ObjectMapper(new YAMLFactory());
 		ManifestMapping.Manifest m=null;
 		try {
@@ -53,7 +48,7 @@ public class ManifestParser {
 	 * @return
 	 */
 	public String generate(Manifest yamlManifest) {
-		Yaml yaml = new Yaml();
+
 		ObjectMapper mapper=new ObjectMapper(new YAMLFactory());
 		
 		try {

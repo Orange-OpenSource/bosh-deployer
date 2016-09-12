@@ -74,8 +74,8 @@ public class MockRestAPITest {
 	Assertions.assertThat(stemcells.size()).isEqualTo(1);
 	Assertions.assertThat(stemcells.get(0).name).isEqualTo("bosh-openstack-kvm-ubuntu-trusty-go_agent");
 	
-	Assertions.assertThat(stemcells.get(0).operating_system).equals("ubuntu-trusty");
-	Assertions.assertThat(stemcells.get(0).version).equals("3232.3");
+	Assertions.assertThat(stemcells.get(0).operating_system).isEqualTo("ubuntu-trusty");
+	Assertions.assertThat(stemcells.get(0).version).isEqualTo("3232.3");
 
 	}
 

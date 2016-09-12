@@ -28,7 +28,7 @@ public class DeploymentSpecFactory {
 		hz.releaseName="hazelcast";
 		hz.exposeAsServiceInstanceIp=true;
 		
-		Map properties=new HashMap<String,String>();
+		Map<String,String> properties=new HashMap<String,String>();
 		properties.put("hazelcast.jvm.memoryMo", "3000");
 		properties.put("hazelcast.group.name", "hz-group");
 		hz.properties.putAll(properties);

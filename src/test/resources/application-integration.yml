@@ -10,7 +10,7 @@ spring:
 director:
   url: https://bosh2.redacted-domain.org/
   user: bosh-deployer
-  password: PesCinyocyegAshpOrwyntAfgerCevNiwigtuebIthDypItyul
+  password: yirImOupbygowWusdab2
   proxyHost: 127.0.0.1
   proxyPort: 3128
    
