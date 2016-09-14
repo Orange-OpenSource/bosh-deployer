@@ -1,5 +1,11 @@
 This component uses bosh rest API to automate programmatic deployment and update
 
+
+Bosh deployer usage overview (as a service broker component)
+
+![Alt text](http://plantuml.com/plantuml/png/XL9TRu8m57rUVyKDU-OFcB1aAijCDarqstjfBz8DAMcBqN-_rWAZYgmlq7lEkH_dDfCdY9QhRRhus6mZyb1JPGGJDQqCSA6G6Qa8OCKXaoT2YFj0zBbBjxi87j_4lZ3pii5GA6jKr0c3ACiRZK6oIwx5IqG2MYaRdikcukeS0ZcjQtAbdczsh_5c7I_Jz-VrCcXfg6rFfkIFRM4CaRhWM9VoF8xtNapMZwqlNwj56avafpuAXfGnrFfu6CDiz2znPn_4JttT6JIsESf16pmmBCjfbi8IgSOx92QhNEmRXTxizcuh-nKvyd0BLg2G6koQ9KFGaRsjDpGVlX06xlOq7pXWPSWG3rjrICiaNTGnUj-wT8Go8uw3yjRI4K6tXBkoVaiaII0JTYaj04aoOL0ETQEB6sVyc-rh-EjK5bSn_i_dW3ILJQ4sT8_ZRSr0LD_M7-S4jriGjDINgMswgw4jUzH3_qUkui5-OEOU8pqJTmh14N8fZNtelm00)
+
+
 Design:
 * bosh zuul: as bosh director is usually hidden in private networks with a specific https port (25555), exposing it with an API Gateway makes sense.
 The spring cloud zuul solution is used, with an errand to push it to cloudfoundry.
