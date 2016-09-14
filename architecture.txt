@@ -43,7 +43,8 @@ operator -> director: configure cloud config
 cfuser -> cloudfoundry: create service
 cloudfoundry -> broker: create service
 broker -> boshdeployer: create deployment
-boshdeployer -> director: bosh deploy
+boshdeployer -> boshzuul: deploy
+boshzuul -> director: bosh deploy
 director -> servicevm: create
 activate servicevm
 director -> serviceaccessvm: create
