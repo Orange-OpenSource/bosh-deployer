@@ -12,20 +12,26 @@ box "DIRECTOR"
 
 box "CF"
 participant cloudfoundry
+end box
+
+box "CF_CELLS"
 participant cfapp
+participant        broker
+participant        boshdeployer
+participant boshzuul
 end box
 
 
 box "BOSH-ON-DEMAND" #LightBlue
-participant        broker
-participant        boshdeployer
+
+
 participant        director
 end box
 
 
 box "BOSH-ON-DEMAND-SERVICE"
-participant servicevm
 participant serviceaccessvm
+participant servicevm
 end box
 
 
@@ -39,11 +45,16 @@ cloudfoundry -> broker: create service
 broker -> boshdeployer: create deployment
 boshdeployer -> director: bosh deploy
 director -> servicevm: create
+activate servicevm
 director -> serviceaccessvm: create
+activate serviceaccessvm
 
 == bind service ==
 
 cfuser -> cloudfoundry: cf push
+cloudfoundry -> cfapp
+activate cfapp
+
 cfuser -> cloudfoundry: cf bind-service
 cloudfoundry -> broker: bind-service
 
