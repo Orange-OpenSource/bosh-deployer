@@ -13,19 +13,19 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.orange.oss.bosh.deployer.BoshDeployerApplication;
-import com.orange.oss.bosh.deployer.boshapi.BoshClient;
 import com.orange.oss.bosh.deployer.boshapi.ApiMappings.VmFull;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {BoshDeployerApplication.class})
-@WebIntegrationTest({"server.port=0", "management.port=0"})
+@SpringBootTest(webEnvironment=WebEnvironment.RANDOM_PORT)
+
+//@SpringApplicationConfiguration(classes = {BoshDeployerApplication.class})
+//@WebIntegrationTest({"server.port=0", "management.port=0"})
 @ActiveProfiles("integration")
 
 public class BoshClientTest {
@@ -34,6 +34,7 @@ public class BoshClientTest {
 	
 	@Autowired
 	BoshClient client;
+
 
 	@Test
 	public void testDetailsVMs() {
