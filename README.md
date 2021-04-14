@@ -1,5 +1,6 @@
-This component uses bosh rest API to automate programmatic deployment and update
+14/04/2021: **This repo is now deprecated. Related use-cases are now served at Orange by** https://github.com/orange-cloudfoundry/cf-ops-automation-broker 
 
+This component uses bosh rest API to automate programmatic deployment and update
 
 Bosh deployer usage overview (as a service broker component)
 
